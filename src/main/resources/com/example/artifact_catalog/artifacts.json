@@ -1,0 +1,17 @@
+{
+  "artifactid": "2012gizaros",
+  "artifactname": "Rosetta Stone",
+  "category": "Sculpture",
+  "civilization": "Ancient Egyptian",
+  "discoverylocation": "El-Rashid (Rosetta), Egypt",
+  "composition": "Granodiorite",
+  "discoverydate": "1799-07-15",
+  "currentplace": "British Museum",
+  "dimensions": {
+    "width": 72.3,
+    "length": 114.4,
+    "height": 27.9
+  },
+  "weight": 760,
+  "tags": ["hellenistic", "inscription", "trilingual", "decree"]
+}
