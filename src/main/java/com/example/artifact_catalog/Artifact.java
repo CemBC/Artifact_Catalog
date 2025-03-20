@@ -15,7 +15,7 @@ public class Artifact {
     private Dimensions dimensions;
     private double weight;
     private List<String> tags;
-    private String imagePath;
+    //private String imagePath;
 
 
     public Artifact() {}
@@ -54,8 +54,8 @@ public class Artifact {
     public List<String> getTags() { return tags; }
     public void setTags(List<String> tags) { this.tags = tags; }
 
-    public String getImagePath() { return imagePath; }
-    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+    //public String getImagePath() { return imagePath; }
+    //public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 
     @Override
     public boolean equals(Object o) {
@@ -72,14 +72,14 @@ public class Artifact {
                 Objects.equals(discoveryDate, artifact.discoveryDate) &&
                 Objects.equals(currentPlace, artifact.currentPlace) &&
                 Objects.equals(dimensions, artifact.dimensions) &&
-                Objects.equals(tags, artifact.tags) &&
-                Objects.equals(imagePath, artifact.imagePath);
+                Objects.equals(tags, artifact.tags)/* &&
+                Objects.equals(imagePath, artifact.imagePath)*/;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(artifactId, artifactName, category, civilization, discoveryLocation,
-                composition, discoveryDate, currentPlace, dimensions, weight, tags, imagePath);
+                composition, discoveryDate, currentPlace, dimensions, weight, tags /*, imagePath*/);
     }
 
 
