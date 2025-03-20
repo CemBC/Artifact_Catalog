@@ -7,12 +7,6 @@ public class Dimensions {
     private double length;
     private double height;
 
-    public Dimensions(double width, double length, double height) {
-        this.width = width;
-        this.length = length;
-        this.height = height;
-    }
-
     public Dimensions() {}
 
     public double getWidth() { return width; }
@@ -39,12 +33,4 @@ public class Dimensions {
         return Objects.hash(width, length, height);
     }
 
-    @Override
-    public String toString() {
-        return "com.example.artifact_catalog.Dimensions{" +
-                "width=" + width +
-                ", length=" + length +
-                ", height=" + height +
-                '}';
-    }
 }

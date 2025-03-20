@@ -18,25 +18,6 @@ public class Artifact {
     private String imagePath;
 
 
-    public Artifact(String artifactId, String artifactName, String category, String civilization,
-                    String discoveryLocation, String composition, String discoveryDate,
-                    String currentPlace, Dimensions dimensions, double weight, List<String> tags,
-                    String imagePath) {
-        this.artifactId = artifactId;
-        this.artifactName = artifactName;
-        this.category = category;
-        this.civilization = civilization;
-        this.discoveryLocation = discoveryLocation;
-        this.composition = composition;
-        this.discoveryDate = discoveryDate;
-        this.currentPlace = currentPlace;
-        this.dimensions = dimensions;
-        this.weight = weight;
-        this.tags = tags;
-        this.imagePath = imagePath;
-    }
-
-
     public Artifact() {}
 
 
@@ -101,21 +82,5 @@ public class Artifact {
                 composition, discoveryDate, currentPlace, dimensions, weight, tags, imagePath);
     }
 
-    @Override
-    public String toString() {
-        return "Artifact{" +
-                "artifactId='" + artifactId + '\'' +
-                ", artifactName='" + artifactName + '\'' +
-                ", category='" + category + '\'' +
-                ", civilization='" + civilization + '\'' +
-                ", discoveryLocation='" + discoveryLocation + '\'' +
-                ", composition='" + composition + '\'' +
-                ", discoveryDate='" + discoveryDate + '\'' +
-                ", currentPlace='" + currentPlace + '\'' +
-                ", dimensions=" + dimensions +
-                ", weight=" + weight +
-                ", tags=" + tags +
-                ", imagePath='" + imagePath + '\'' +
-                '}';
-    }
+
 }
