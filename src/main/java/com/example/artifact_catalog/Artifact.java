@@ -1,3 +1,5 @@
+package com.example.artifact_catalog;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +17,7 @@ public class Artifact {
     private List<String> tags;
     private String imagePath;
 
-    // Constructor
+
     public Artifact(String artifactId, String artifactName, String category, String civilization,
                     String discoveryLocation, String composition, String discoveryDate,
                     String currentPlace, Dimensions dimensions, double weight, List<String> tags,
@@ -34,10 +36,10 @@ public class Artifact {
         this.imagePath = imagePath;
     }
 
-    // Default constructor
+
     public Artifact() {}
 
-    // Getters and Setters
+
     public String getArtifactId() { return artifactId; }
     public void setArtifactId(String artifactId) { this.artifactId = artifactId; }
 

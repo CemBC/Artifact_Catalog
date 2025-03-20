@@ -1,6 +1,8 @@
+package com.example.artifact_catalog;
+
 import java.util.Objects;
 
-class Dimensions {
+public class Dimensions {
     private double width;
     private double length;
     private double height;
@@ -39,7 +41,7 @@ class Dimensions {
 
     @Override
     public String toString() {
-        return "Dimensions{" +
+        return "com.example.artifact_catalog.Dimensions{" +
                 "width=" + width +
                 ", length=" + length +
                 ", height=" + height +
