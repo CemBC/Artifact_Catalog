@@ -10,12 +10,20 @@ import java.util.List;
 
 public class File_Manager {
 
+    //private static final String FILE_PATH = System.getProperty("user.home") + "/Documents/artifacts.json";
+
     public List<Artifact> readArtifactsFromFile(String filePath) throws IOException {
-        String content = new String(Files.readAllBytes(Paths.get(filePath)));
+        Path path = Paths.get(filePath);
+        if(Files.notExists(path)){
+            Files.createFile(path);
+            Files.write(path, "[]".getBytes());
+        }
+
+        String content = new String(Files.readAllBytes(path));
         JSONArray jsonArray = new JSONArray(content);
 
         List<Artifact> artifacts = new ArrayList<>();
-        for(int i=0;i<jsonArray.length();i++){
+        for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             Artifact artifact = new Artifact();
             artifact.setArtifactId(jsonObject.getString("artifactid"));
@@ -35,7 +43,7 @@ public class File_Manager {
             artifact.setWeight(jsonObject.getDouble("weight"));
             JSONArray tagsArray = jsonObject.getJSONArray("tags");
             List<String> tags = new ArrayList<>();
-            for(int j=0;j<tagsArray.length();j++){
+            for (int j = 0; j < tagsArray.length(); j++) {
                 tags.add(tagsArray.getString(j));
             }
             artifact.setTags(tags);
@@ -45,7 +53,13 @@ public class File_Manager {
     }
 
     public void writeArtifactsToFile(String filePath, Artifact artifact) throws IOException {
-        String content = new String(Files.readAllBytes(Paths.get(filePath)));
+        Path path = Paths.get(filePath);
+        if (Files.notExists(path)) {
+            Files.createFile(path);
+            Files.write(path, "[]".getBytes());
+        }
+
+        String content = new String(Files.readAllBytes(path));
         JSONArray jsonArray = new JSONArray(content);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("artifactid", artifact.getArtifactId());
@@ -65,6 +79,6 @@ public class File_Manager {
         JSONArray tagsArray = new JSONArray(artifact.getTags());
         jsonObject.put("tags", tagsArray);
         jsonArray.put(jsonObject);
-        Files.write(Paths.get(filePath), (jsonArray.toString(4) + "\n").getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+        Files.write(path, (jsonArray.toString(4) + "\n").getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
     }
 }

@@ -15,7 +15,7 @@ public class Artifact {
     private Dimensions dimensions;
     private double weight;
     private List<String> tags;
-    //private String imagePath;
+    private String imagePath;
 
 
     public Artifact() {}
@@ -54,8 +54,8 @@ public class Artifact {
     public List<String> getTags() { return tags; }
     public void setTags(List<String> tags) { this.tags = tags; }
 
-    //public String getImagePath() { return imagePath; }
-    //public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+    public String getImagePath() { return imagePath; }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 
     @Override
     public boolean equals(Object o) {
