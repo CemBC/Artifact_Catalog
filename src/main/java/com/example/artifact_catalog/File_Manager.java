@@ -34,6 +34,8 @@ public class File_Manager {
             artifact.setComposition(jsonObject.getString("composition"));
             artifact.setDiscoveryDate(jsonObject.getString("discoverydate"));
             artifact.setCurrentPlace(jsonObject.getString("currentplace"));
+            artifact.setImagePath(jsonObject.optString("imagePath", ""));
+
             JSONObject dimensionsObject = jsonObject.getJSONObject("dimensions");
             Dimensions dimensions = new Dimensions();
             dimensions.setWidth(dimensionsObject.getDouble("width"));
@@ -42,6 +44,7 @@ public class File_Manager {
             artifact.setDimensions(dimensions);
             artifact.setWeight(jsonObject.getDouble("weight"));
             JSONArray tagsArray = jsonObject.getJSONArray("tags");
+
             List<String> tags = new ArrayList<>();
             for (int j = 0; j < tagsArray.length(); j++) {
                 tags.add(tagsArray.getString(j));
@@ -70,12 +73,15 @@ public class File_Manager {
         jsonObject.put("composition", artifact.getComposition());
         jsonObject.put("discoverydate", artifact.getDiscoveryDate());
         jsonObject.put("currentplace", artifact.getCurrentPlace());
+        jsonObject.put("imagePath", artifact.getImagePath());
+
         JSONObject dimensionsObject = new JSONObject();
         dimensionsObject.put("width", artifact.getDimensions().getWidth());
         dimensionsObject.put("length", artifact.getDimensions().getLength());
         dimensionsObject.put("height", artifact.getDimensions().getHeight());
         jsonObject.put("dimensions", dimensionsObject);
         jsonObject.put("weight", artifact.getWeight());
+
         JSONArray tagsArray = new JSONArray(artifact.getTags());
         jsonObject.put("tags", tagsArray);
         jsonArray.put(jsonObject);
