@@ -6,18 +6,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 public class GUI_Manager extends Application {
 
     private File_Manager fileManager = new File_Manager();
+    private SearchManager searchManager = new SearchManager();
     private static final String FILE_PATH = System.getProperty("user.home") + "/Documents/artifacts.json";
-    private String selectedImagePath = "";
 
     @Override
     public void start(Stage primaryStage) {
@@ -41,10 +39,27 @@ public class GUI_Manager extends Application {
             }
         });
 
+        TextField searchField = new TextField();
+        searchField.setPromptText("Enter search terms (comma-separated)");
+        Button searchButton = new Button("Search");
+        searchButton.setOnAction(e -> {
+            try {
+                List<Artifact> artifacts = fileManager.readArtifactsFromFile(FILE_PATH);
+                String searchString = searchField.getText();
+                List<Artifact> searchResults = searchManager.searchArtifacts(artifacts, searchString);
+                listView.getItems().clear();
+                for (Artifact artifact : searchResults) {
+                    listView.getItems().add(artifact.getArtifactName() + " (" + artifact.getArtifactId() + ")");
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
         Button addButton = new Button("Add Artifact");
         addButton.setOnAction(e -> showAddArtifactDialog());
 
-        vbox.getChildren().addAll(loadButton, listView, addButton);
+        vbox.getChildren().addAll(loadButton, searchField, searchButton, listView, addButton);
 
         Scene scene = new Scene(vbox, 400, 300);
         primaryStage.setScene(scene);
@@ -73,18 +88,6 @@ public class GUI_Manager extends Application {
         TextField heightField = new TextField();
         TextField weightField = new TextField();
         TextField tagsField = new TextField();
-        Button imageButton = new Button("Select Image");
-
-        imageButton.setOnAction(e -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.jpeg", "*.png")
-            );
-            File selectedFile = fileChooser.showOpenDialog(dialog);
-            if (selectedFile != null) {
-                selectedImagePath = selectedFile.getAbsolutePath();
-            }
-        });
 
         grid.add(new Label("ID:"), 0, 0);
         grid.add(idField, 1, 0);
@@ -112,8 +115,6 @@ public class GUI_Manager extends Application {
         grid.add(weightField, 1, 11);
         grid.add(new Label("Tags (comma-separated):"), 0, 12);
         grid.add(tagsField, 1, 12);
-        grid.add(new Label("Image:"), 0, 13);
-        grid.add(imageButton, 1, 13);
 
         Button saveButton = new Button("Save");
         saveButton.setOnAction(e -> {
@@ -126,7 +127,6 @@ public class GUI_Manager extends Application {
             artifact.setComposition(compositionField.getText());
             artifact.setDiscoveryDate(dateField.getText());
             artifact.setCurrentPlace(placeField.getText());
-            artifact.setImagePath(selectedImagePath);
             Dimensions dimensions = new Dimensions();
             dimensions.setWidth(Double.parseDouble(widthField.getText()));
             dimensions.setLength(Double.parseDouble(lengthField.getText()));
@@ -143,9 +143,9 @@ public class GUI_Manager extends Application {
             }
         });
 
-        grid.add(saveButton, 1, 14);
+        grid.add(saveButton, 1, 13);
 
-        Scene scene = new Scene(grid, 400, 450);
+        Scene scene = new Scene(grid, 400, 400);
         dialog.setScene(scene);
         dialog.show();
     }
