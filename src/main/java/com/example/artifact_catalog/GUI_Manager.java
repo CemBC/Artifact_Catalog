@@ -46,7 +46,7 @@ public class GUI_Manager extends Application {
             try {
                 List<Artifact> artifacts = fileManager.readArtifactsFromFile(FILE_PATH);
                 String searchString = searchField.getText();
-                List<Artifact> searchResults = searchManager.searchArtifacts(artifacts, searchString);
+                List<Artifact> searchResults = searchManager.searchAndFilterArtifacts(artifacts, searchString);
                 listView.getItems().clear();
                 for (Artifact artifact : searchResults) {
                     listView.getItems().add(artifact.getArtifactName() + " (" + artifact.getArtifactId() + ")");
