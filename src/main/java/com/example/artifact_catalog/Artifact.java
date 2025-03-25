@@ -72,14 +72,14 @@ public class Artifact {
                 Objects.equals(discoveryDate, artifact.discoveryDate) &&
                 Objects.equals(currentPlace, artifact.currentPlace) &&
                 Objects.equals(dimensions, artifact.dimensions) &&
-                Objects.equals(tags, artifact.tags)/* &&
-                Objects.equals(imagePath, artifact.imagePath)*/;
+                Objects.equals(tags, artifact.tags) &&
+                Objects.equals(imagePath, artifact.imagePath);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(artifactId, artifactName, category, civilization, discoveryLocation,
-                composition, discoveryDate, currentPlace, dimensions, weight, tags /*, imagePath*/);
+                composition, discoveryDate, currentPlace, dimensions, weight, tags , imagePath);
     }
 
 
