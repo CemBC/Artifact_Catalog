@@ -8,16 +8,20 @@ public class SearchManager {
 
 
     public List<Artifact> searchAndFilterArtifacts(List<Artifact> artifacts, String data , List<String> tags) {
-
         List<Artifact> result = new ArrayList<>();
-        String[] splitted = data.toLowerCase().split(",");
-        for (int i = 0; i < splitted.length; i++) {
-            splitted[i] = splitted[i].trim();
-        }
+        if(data.isEmpty()){
+           result = artifacts;
+        }else {
+            System.out.println("ORKUNDAMA");
+            String[] splitted = data.toLowerCase().split(",");
+            for (int i = 0; i < splitted.length; i++) {
+                splitted[i] = splitted[i].trim();
+            }
 
-        for (Artifact artifact : artifacts) {
-            if (matched(artifact, splitted)) {
-                result.add(artifact);
+            for (Artifact artifact : artifacts) {
+                if (matched(artifact, splitted)) {
+                    result.add(artifact);
+                }
             }
         }
 
