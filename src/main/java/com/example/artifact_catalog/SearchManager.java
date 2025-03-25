@@ -12,7 +12,6 @@ public class SearchManager {
         if(data.isEmpty()){
            result = artifacts;
         }else {
-            System.out.println("ORKUNDAMA");
             String[] splitted = data.toLowerCase().split(",");
             for (int i = 0; i < splitted.length; i++) {
                 splitted[i] = splitted[i].trim();
