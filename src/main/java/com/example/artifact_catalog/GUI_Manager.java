@@ -59,9 +59,11 @@ public class GUI_Manager extends Application {
             try {
                 List<Artifact> artifacts = fileManager.readArtifactsFromFile(FILE_PATH);
                 String searchString = searchField.getText();
-                boolean[] checkedTags = new boolean[tags.length];
+                List<String> checkedTags = new ArrayList<>();
                 for (int i = 0; i < tags.length; i++) {
-                    checkedTags[i] = tagCheckBoxes[i].isSelected();
+                    if(tagCheckBoxes[i].isSelected()) {
+                        checkedTags.add(tags[i]);
+                    }
                 }
                 List<Artifact> searchResults = searchManager.searchAndFilterArtifacts(artifacts, searchString, checkedTags);
                 listView.getItems().clear();
@@ -187,5 +189,6 @@ public class GUI_Manager extends Application {
 
     public static void main(String[] args) {
         launch(args);
+
     }
 }
