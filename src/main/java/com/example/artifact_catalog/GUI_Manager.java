@@ -19,6 +19,7 @@ public class GUI_Manager extends Application {
     private static final String FILE_PATH = System.getProperty("user.home") + "/Documents/artifacts.json";
     private final String[] tags = {"tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9"};
     private CheckBox[] tagCheckBoxes = new CheckBox[tags.length];
+    private List<Artifact> artifacts = new ArrayList<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -172,12 +173,8 @@ public class GUI_Manager extends Application {
             }
             artifact.setTags(selectedTags);
 
-            try {
-                fileManager.writeArtifactsToFile(FILE_PATH, artifact);
-                dialog.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            addArtifact(artifact);
+            dialog.close();
         });
 
         grid.add(saveButton, 1, 13);
@@ -185,6 +182,15 @@ public class GUI_Manager extends Application {
         Scene scene = new Scene(grid, 400, 400);
         dialog.setScene(scene);
         dialog.show();
+    }
+
+    private void addArtifact(Artifact newArtifact) {
+        artifacts.add(newArtifact);
+        try {
+            fileManager.writeArtifactsToFile(FILE_PATH, newArtifact);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
