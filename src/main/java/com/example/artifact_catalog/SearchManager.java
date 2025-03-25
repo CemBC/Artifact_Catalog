@@ -23,7 +23,7 @@ public class SearchManager {
         }
 
         Set<String> tagSet = new HashSet<>(tags);
-        result.removeIf(artifact -> !artifact.getTags().containsAll(tagSet));
+        result.removeIf(artifact -> !new HashSet<>(artifact.getTags()).containsAll(tagSet));
 
         return result;
     }
