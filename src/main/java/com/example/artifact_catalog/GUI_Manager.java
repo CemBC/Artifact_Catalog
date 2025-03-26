@@ -45,14 +45,14 @@ public class GUI_Manager extends Application {
         TextField searchField = new TextField();
         searchField.setPromptText("Enter search terms (comma-separated)");
 
-        GridPane tagGrid = new GridPane();
-        tagGrid.setPadding(new Insets(10));
-        tagGrid.setHgap(10);
-        tagGrid.setVgap(10);
+        HBox tagBox = new HBox(10); // 10 piksel boşluk ile
+        tagBox.setPadding(new Insets(10));
         for (int i = 0; i < tags.length; i++) {
             tagCheckBoxes[i] = new CheckBox(tags[i]);
-            tagGrid.add(tagCheckBoxes[i], i % 3, i / 3);
+            tagBox.getChildren().add(tagCheckBoxes[i]);
         }
+
+        Button searchButton = new Button("Search");
 
         Button addButton = new Button("Add Artifact");
         addButton.setOnAction(e -> showAddArtifactDialog());  //add penceresi açıyor
@@ -66,7 +66,7 @@ public class GUI_Manager extends Application {
         HBox buttonBox = new HBox(10); // 10 piksel boşluk ile
         buttonBox.getChildren().addAll(addButton, removeButton, editButton);
 
-        vbox.getChildren().addAll(loadButton, searchField, tagGrid, listView, buttonBox);
+        vbox.getChildren().addAll(loadButton, searchField, tagBox, listView, buttonBox);
 
         Scene scene = new Scene(vbox, 600, 400);
         primaryStage.setScene(scene);
