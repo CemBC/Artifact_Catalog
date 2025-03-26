@@ -29,6 +29,10 @@ public class GUI_Manager extends Application {
 
         Button loadButton = new Button("Load Artifacts");
         ListView<String> listView = new ListView<>();
+        ScrollPane scrollPane = new ScrollPane(listView);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPrefViewportHeight(200); // ScrollPane'in yüksekliğini ayarlıyoruz
+
         loadButton.setOnAction(e -> {  //load tuşuna basınca jsondaki verileri listview içine atıyor
             try {
                 catalog.loadArtifactsFromFile();  //burdaki methodda okuyor verileri
@@ -66,7 +70,7 @@ public class GUI_Manager extends Application {
         HBox buttonBox = new HBox(10); // 10 piksel boşluk ile
         buttonBox.getChildren().addAll(addButton, removeButton, editButton);
 
-        vbox.getChildren().addAll(loadButton, searchField, tagBox, listView, buttonBox);
+        vbox.getChildren().addAll(loadButton, searchField, tagBox, scrollPane, buttonBox);
 
         Scene scene = new Scene(vbox, 600, 400);
         primaryStage.setScene(scene);
