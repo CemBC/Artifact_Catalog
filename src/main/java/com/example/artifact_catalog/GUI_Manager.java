@@ -16,6 +16,7 @@ public class GUI_Manager extends Application {
 
     private File_Manager fileManager = new File_Manager();
     private SearchManager searchManager = new SearchManager();
+    private Catalog catalog =new Catalog(new ArrayList<>());
     private static final String FILE_PATH = System.getProperty("user.home") + "/Documents/artifacts.json";
     private final String[] tags = {"tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9"};
     private CheckBox[] tagCheckBoxes = new CheckBox[tags.length];
@@ -34,6 +35,7 @@ public class GUI_Manager extends Application {
         loadButton.setOnAction(e -> {
             try {
                 List<Artifact> artifacts = fileManager.readArtifactsFromFile(FILE_PATH);
+                catalog.setArtifacts(artifacts);
                 listView.getItems().clear();
                 for (Artifact artifact : artifacts) {
                     listView.getItems().add(artifact.getArtifactName() + " (" + artifact.getArtifactId() + ")");
