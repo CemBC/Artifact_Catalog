@@ -13,14 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GUI_Manager extends Application {
-
-    private File_Manager fileManager = new File_Manager();
-    private SearchManager searchManager = new SearchManager();
     private Catalog catalog =new Catalog();
-    private static final String FILE_PATH = System.getProperty("user.home") + "/Documents/artifacts.json";
     private final String[] tags = {"tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9"};
     private CheckBox[] tagCheckBoxes = new CheckBox[tags.length];
-    private List<Artifact> artifacts = new ArrayList<>();
+    //private SearchManager searchManager = new SearchManager();
 
     @Override
     public void start(Stage primaryStage) {
@@ -32,9 +28,9 @@ public class GUI_Manager extends Application {
 
         Button loadButton = new Button("Load Artifacts");
         ListView<String> listView = new ListView<>();
-        loadButton.setOnAction(e -> {
+        loadButton.setOnAction(e -> {  //load tuşuna basınca jsondaki verileri listview içine atıyor
             try {
-                catalog.loadArtifactsFromFile();
+                catalog.loadArtifactsFromFile();  //burdaki methodda okuyor verileri
                 List<Artifact> artifacts = catalog.getArtifacts();
                 listView.getItems().clear();
                 for (Artifact artifact : artifacts) {
@@ -57,33 +53,10 @@ public class GUI_Manager extends Application {
             tagGrid.add(tagCheckBoxes[i], i % 3, i / 3);
         }
 
-        Button searchButton = new Button("Search");
-        searchButton.setOnAction(e -> {
-            try {
-                List<Artifact> artifacts = fileManager.readArtifactsFromFile(FILE_PATH);
-                String searchString = searchField.getText();
-                List<String> checkedTags = new ArrayList<>();
-                for (int i = 0; i < tags.length; i++) {
-                    if(tagCheckBoxes[i].isSelected()) {
-                        checkedTags.add(tags[i]);
-                    }
-                }
-                List<Artifact> searchResults = searchManager.searchAndFilterArtifacts(artifacts, searchString, checkedTags);
-                listView.getItems().clear();
-                if (!searchResults.isEmpty()) {
-                    for (Artifact artifact : searchResults) {
-                        listView.getItems().add(artifact.getArtifactName() + " (" + artifact.getArtifactId() + ")");
-                    }
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
-
         Button addButton = new Button("Add Artifact");
-        addButton.setOnAction(e -> showAddArtifactDialog());
+        addButton.setOnAction(e -> showAddArtifactDialog());  //add penceresi açıyor
 
-        vbox.getChildren().addAll(loadButton, searchField, tagGrid, searchButton, listView, addButton);
+        vbox.getChildren().addAll(loadButton, searchField, tagGrid, listView, addButton);
 
         Scene scene = new Scene(vbox, 600, 400);
         primaryStage.setScene(scene);
@@ -175,7 +148,7 @@ public class GUI_Manager extends Application {
             }
             artifact.setTags(selectedTags);
 
-            catalog.addArtifact(artifact);
+            catalog.addArtifact(artifact);  //catalogtaki listemizin içine eklenen artifactı ekliyor
             dialog.close();
         });
 

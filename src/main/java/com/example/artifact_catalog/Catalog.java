@@ -11,7 +11,7 @@ public class Catalog {
 
     public Catalog() {
         this.artifacts =new ArrayList<>();
-        this.fileManager = new File_Manager(); // Initialize fileManager
+        this.fileManager = new File_Manager();
     }
 
     public void addArtifact(Artifact artifact) {
