@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -56,7 +57,16 @@ public class GUI_Manager extends Application {
         Button addButton = new Button("Add Artifact");
         addButton.setOnAction(e -> showAddArtifactDialog());  //add penceresi açıyor
 
-        vbox.getChildren().addAll(loadButton, searchField, tagGrid, listView, addButton);
+        Button removeButton = new Button("Remove Artifact");
+        removeButton.setDisable(true); // Butonu devre dışı bırakıyoruz
+
+        Button editButton = new Button("Edit Artifact");
+        editButton.setDisable(true); // Butonu devre dışı bırakıyoruz
+
+        HBox buttonBox = new HBox(10); // 10 piksel boşluk ile
+        buttonBox.getChildren().addAll(addButton, removeButton, editButton);
+
+        vbox.getChildren().addAll(loadButton, searchField, tagGrid, listView, buttonBox);
 
         Scene scene = new Scene(vbox, 600, 400);
         primaryStage.setScene(scene);
@@ -158,7 +168,6 @@ public class GUI_Manager extends Application {
         dialog.setScene(scene);
         dialog.show();
     }
-
 
 
     public static void main(String[] args) {
