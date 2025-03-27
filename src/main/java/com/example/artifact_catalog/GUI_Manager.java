@@ -64,6 +64,19 @@ public class GUI_Manager extends Application {
         Button removeButton = new Button("Remove Artifact");
         removeButton.setDisable(true); // Butonu devre dışı bırakıyoruz
 
+        listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            removeButton.setDisable(newValue == null);
+        });
+
+        removeButton.setOnAction(e -> {
+            String selectedItem = listView.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                String artifactId = selectedItem.substring(selectedItem.indexOf('(') + 1, selectedItem.indexOf(')'));
+                catalog.removeArtifact(artifactId);
+                listView.getItems().remove(selectedItem);
+            }
+        });
+
         Button editButton = new Button("Edit Artifact");
         editButton.setDisable(true); // Butonu devre dışı bırakıyoruz
 

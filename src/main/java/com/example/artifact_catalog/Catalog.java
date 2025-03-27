@@ -23,6 +23,20 @@ public class Catalog {
         }
     }
 
+    public void removeArtifact(String artifactId) {
+        for (int i = artifacts.size() - 1; i >= 0; i--) { // index kaymasını engellemek için sondan başa
+            if (artifacts.get(i).getArtifactId().equals(artifactId)) {
+                artifacts.remove(i);
+            }
+        }
+        try {
+            fileManager.writeAllArtifactsToFile(FILE_PATH, artifacts); //performans için???
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
     public void loadArtifactsFromFile() throws IOException {
         List<Artifact> artifacts = fileManager.readArtifactsFromFile(FILE_PATH);
         setArtifacts(artifacts);

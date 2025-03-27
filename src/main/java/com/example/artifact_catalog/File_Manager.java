@@ -87,4 +87,38 @@ public class File_Manager {
         jsonArray.put(jsonObject);
         Files.write(path, (jsonArray.toString(4) + "\n").getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
     }
+    public void writeAllArtifactsToFile(String filePath, List<Artifact> artifacts) throws IOException {
+        Path path = Paths.get(filePath);
+        if (Files.notExists(path)) {
+            Files.createFile(path);
+        }
+
+        JSONArray jsonArray = new JSONArray();
+        for (Artifact artifact : artifacts) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("artifactid", artifact.getArtifactId());
+            jsonObject.put("artifactname", artifact.getArtifactName());
+            jsonObject.put("category", artifact.getCategory());
+            jsonObject.put("civilization", artifact.getCivilization());
+            jsonObject.put("discoverylocation", artifact.getDiscoveryLocation());
+            jsonObject.put("composition", artifact.getComposition());
+            jsonObject.put("discoverydate", artifact.getDiscoveryDate());
+            jsonObject.put("currentplace", artifact.getCurrentPlace());
+            jsonObject.put("imagePath", artifact.getImagePath());
+
+            JSONObject dimensionsObject = new JSONObject();
+            dimensionsObject.put("width", artifact.getDimensions().getWidth());
+            dimensionsObject.put("length", artifact.getDimensions().getLength());
+            dimensionsObject.put("height", artifact.getDimensions().getHeight());
+            jsonObject.put("dimensions", dimensionsObject);
+            jsonObject.put("weight", artifact.getWeight());
+
+            JSONArray tagsArray = new JSONArray(artifact.getTags());
+            jsonObject.put("tags", tagsArray);
+            jsonArray.put(jsonObject);
+        }
+
+        Files.write(path, jsonArray.toString(4).getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+    }
+
 }
