@@ -12,6 +12,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.AbstractMap;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class GUI_Manager extends Application {
     private Catalog catalog =new Catalog();
@@ -32,6 +38,14 @@ public class GUI_Manager extends Application {
         ScrollPane scrollPane = new ScrollPane(listView);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefViewportHeight(200); // ScrollPane'in yüksekliğini ayarlıyoruz
+
+        // ListView'a selection listener ekliyoruz
+        listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                String artifactId = newValue.substring(newValue.indexOf('(') + 1, newValue.indexOf(')'));
+                showArtifactDetails(artifactId);
+            }
+        });
 
         loadButton.setOnAction(e -> {  //load tuşuna basınca jsondaki verileri listview içine atıyor
             try {
@@ -77,11 +91,8 @@ public class GUI_Manager extends Application {
             }
         });
 
-        Button editButton = new Button("Edit Artifact");
-        editButton.setDisable(true); // Butonu devre dışı bırakıyoruz
-
         HBox buttonBox = new HBox(10); // 10 piksel boşluk ile
-        buttonBox.getChildren().addAll(addButton, removeButton, editButton);
+        buttonBox.getChildren().addAll(addButton, removeButton);
 
         vbox.getChildren().addAll(loadButton, searchField, tagBox, scrollPane, buttonBox);
 
@@ -192,6 +203,57 @@ public class GUI_Manager extends Application {
         dialog.show();
     }
 
+    private void showArtifactDetails(String artifactId) {
+        Stage dialog = new Stage();
+        dialog.setTitle("Artifact Details");
+
+        TableView<Map.Entry<String, String>> table = new TableView<>();
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.setPrefWidth(500);
+        table.setPrefHeight(400);
+
+        TableColumn<Map.Entry<String, String>, String> attributeColumn = new TableColumn<>("Attribute");
+        attributeColumn.setCellValueFactory(new PropertyValueFactory<>("key"));
+        attributeColumn.setStyle("-fx-font-weight: bold;");
+
+        TableColumn<Map.Entry<String, String>, String> valueColumn = new TableColumn<>("Value");
+        valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
+
+        table.getColumns().addAll(attributeColumn, valueColumn);
+
+        // Seçilen artifact'ı bul
+        Artifact selectedArtifact = null;
+        for (Artifact artifact : catalog.getArtifacts()) {
+            if (artifact.getArtifactId().equals(artifactId)) {
+                selectedArtifact = artifact;
+                break;
+            }
+        }
+
+        if (selectedArtifact != null) {
+            ObservableList<Map.Entry<String, String>> data = FXCollections.observableArrayList();
+            data.add(new AbstractMap.SimpleEntry<>("ID", selectedArtifact.getArtifactId()));
+            data.add(new AbstractMap.SimpleEntry<>("Name", selectedArtifact.getArtifactName()));
+            data.add(new AbstractMap.SimpleEntry<>("Category", selectedArtifact.getCategory()));
+            data.add(new AbstractMap.SimpleEntry<>("Civilization", selectedArtifact.getCivilization()));
+            data.add(new AbstractMap.SimpleEntry<>("Location", selectedArtifact.getDiscoveryLocation()));
+            data.add(new AbstractMap.SimpleEntry<>("Composition", selectedArtifact.getComposition()));
+            data.add(new AbstractMap.SimpleEntry<>("Discovery Date", selectedArtifact.getDiscoveryDate()));
+            data.add(new AbstractMap.SimpleEntry<>("Current Place", selectedArtifact.getCurrentPlace()));
+            data.add(new AbstractMap.SimpleEntry<>("Dimensions", String.format("Width: %.2f, Length: %.2f, Height: %.2f",
+                    selectedArtifact.getDimensions().getWidth(),
+                    selectedArtifact.getDimensions().getLength(),
+                    selectedArtifact.getDimensions().getHeight())));
+            data.add(new AbstractMap.SimpleEntry<>("Weight", String.format("%.2f", selectedArtifact.getWeight())));
+            data.add(new AbstractMap.SimpleEntry<>("Tags", String.join(", ", selectedArtifact.getTags())));
+
+            table.setItems(data);
+        }
+
+        Scene scene = new Scene(table, 500, 400);
+        dialog.setScene(scene);
+        dialog.show();
+    }
 
     public static void main(String[] args) {
         launch(args);
