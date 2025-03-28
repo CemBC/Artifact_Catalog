@@ -181,7 +181,13 @@ public class GUI_Manager extends Application {
 
         grid.add(saveButton, 1, 13);
 
-        Scene scene = new Scene(grid, 400, 400);
+        ScrollPane scrollPane = new ScrollPane(grid);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setPrefViewportWidth(400);
+        scrollPane.setPrefViewportHeight(400);
+
+        Scene scene = new Scene(scrollPane, 400, 400);
         dialog.setScene(scene);
         dialog.show();
     }
