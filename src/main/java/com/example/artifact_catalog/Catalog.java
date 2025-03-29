@@ -42,6 +42,12 @@ public class Catalog {
         setArtifacts(artifacts);
     }
 
+    public List<Artifact> getFilteredArtifacts(String data, List<String> tags) { //Search burda oluyor
+        SearchManager searchManager = new SearchManager();
+        List<Artifact> filteredArtifacts = searchManager.searchAndFilterArtifacts(artifacts, data, tags);
+        return filteredArtifacts; //filteredArtifacts döndürülecek
+        //burada artifacts listesini setlemiyoruz çünkü o zaman listemiz değişmiş olur , sadece filterlamaya çalışıyoruz
+    }
     public List<Artifact> getArtifacts() {
         return artifacts;
     }

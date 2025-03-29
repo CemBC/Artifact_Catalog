@@ -40,17 +40,31 @@ public class GUI_Manager extends Application {
         scrollPane.setPrefViewportHeight(200); // ScrollPane'in yüksekliğini ayarlıyoruz
 
         // ListView'a selection listener ekliyoruz
-        listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                String artifactId = newValue.substring(newValue.indexOf('(') + 1, newValue.indexOf(')'));
-                showArtifactDetails(artifactId);
+        listView.setOnMouseClicked(event->{
+            if(event.getClickCount()==2){  //Çift tıklama ile edit butonunu etkinleştirme eklendi
+                String selectedItem = listView.getSelectionModel().getSelectedItem();
+                if (selectedItem!=null){
+                    String artifactId = selectedItem.substring(selectedItem.indexOf('(') + 1, selectedItem.indexOf(')'));
+                    showArtifactDetails(artifactId);
+                }
             }
         });
 
-        loadButton.setOnAction(e -> {  //load tuşuna basınca jsondaki verileri listview içine atıyor
+        TextField searchField = new TextField(); //SearchField LoadButton dan önce oluşturuldu ki datayı çekebilelim
+        searchField.setPromptText("Enter search terms (comma-separated)");
+
+
+        loadButton.setOnAction(e -> {//load tuşuna basınca jsondaki verileri listview içine atıyor
+            String data = searchField.getText(); //datayı String olarak alıyor
+            List<String> selectedTags = new ArrayList<>(); //seçilen tagları alıyor
+            for (CheckBox checkBox : tagCheckBoxes) {
+                if (checkBox.isSelected()) {
+                    selectedTags.add(checkBox.getText());
+                }
+            }
             try {
                 catalog.loadArtifactsFromFile();  //burdaki methodda okuyor verileri
-                List<Artifact> artifacts = catalog.getArtifacts();
+                List<Artifact> artifacts = catalog.getFilteredArtifacts(data , selectedTags); //Search Butonu yerine load butonuna search mantığı uygulandı
                 listView.getItems().clear();
                 for (Artifact artifact : artifacts) {
                     listView.getItems().add(artifact.getArtifactName() + " (" + artifact.getArtifactId() + ")");
@@ -60,8 +74,7 @@ public class GUI_Manager extends Application {
             }
         });
 
-        TextField searchField = new TextField();
-        searchField.setPromptText("Enter search terms (comma-separated)");
+
 
         HBox tagBox = new HBox(10); // 10 piksel boşluk ile
         tagBox.setPadding(new Insets(10));
@@ -70,7 +83,7 @@ public class GUI_Manager extends Application {
             tagBox.getChildren().add(tagCheckBoxes[i]);
         }
 
-        Button searchButton = new Button("Search");
+
 
         Button addButton = new Button("Add Artifact");
         addButton.setOnAction(e -> showAddArtifactDialog());  //add penceresi açıyor
@@ -161,33 +174,12 @@ public class GUI_Manager extends Application {
         grid.add(tagGrid, 1, 12);
 
         Button saveButton = new Button("Save");
-        saveButton.setOnAction(e -> {
-            Artifact artifact = new Artifact();
-            artifact.setArtifactId(idField.getText());
-            artifact.setArtifactName(nameField.getText());
-            artifact.setCategory(categoryField.getText());
-            artifact.setCivilization(civilizationField.getText());
-            artifact.setDiscoveryLocation(locationField.getText());
-            artifact.setComposition(compositionField.getText());
-            artifact.setDiscoveryDate(dateField.getText());
-            artifact.setCurrentPlace(placeField.getText());
-            Dimensions dimensions = new Dimensions();
-            dimensions.setWidth(Double.parseDouble(widthField.getText()));
-            dimensions.setLength(Double.parseDouble(lengthField.getText()));
-            dimensions.setHeight(Double.parseDouble(heightField.getText()));
-            artifact.setDimensions(dimensions);
-            artifact.setWeight(Double.parseDouble(weightField.getText()));
-
-            List<String> selectedTags = new ArrayList<>();
-            for (CheckBox checkBox : tagCheckBoxes) {
-                if (checkBox.isSelected()) {
-                    selectedTags.add(checkBox.getText());
-                }
-            }
-            artifact.setTags(selectedTags);
-
-            catalog.addArtifact(artifact);  //catalogtaki listemizin içine eklenen artifactı ekliyor
-            dialog.close();
+        saveButton.setOnAction(e -> {  //Save butonuna basınca hata varsa kırmızı çerçeve oluşturuyor
+            TextField[] fields = {idField, nameField,   //if else i kısaltmak için for döngüsünde döndürülecek fieldlar
+                    categoryField, civilizationField, locationField,
+                    compositionField, dateField, placeField,
+                    widthField, lengthField, heightField, weightField};
+            saveArtifact(fields, tagCheckBoxes, dialog);
         });
 
         grid.add(saveButton, 1, 13);
@@ -253,6 +245,59 @@ public class GUI_Manager extends Application {
         Scene scene = new Scene(table, 500, 400);
         dialog.setScene(scene);
         dialog.show();
+    }
+
+    private void saveArtifact(TextField[] fields, CheckBox[] tagCheckBoxes, Stage dialog) {
+        boolean isValid = true;
+        for (TextField field : fields) {
+            field.setStyle("");  //her save a basıldığında kırmızı çerçeveyi kaldırıyor , eğer düzelltiyse kırmızı çerçeve gözükmesin diye
+            if (field.getText().isEmpty()) {
+                field.setStyle("-fx-border-color: red;"); //boş ise kutu kırmızı çerçeveli olacak
+                isValid = false;
+            }
+        }
+        String datePattern = "^(0[1-9]|[12][0-9]|3[01]).(0[1-9]|1[0-2]).\\d{4}$";  //date için regex 01.01.2001
+        if (!fields[6].getText().matches(datePattern)) {
+            fields[6].setStyle("-fx-border-color: red;");
+            isValid = false;
+        }
+        int[] floatFieldIndices = {8, 9, 10, 11};  //width,length,height,weight ' in float değer olup olmadığını kontrol ediyor
+        for (int index : floatFieldIndices) {
+            try {
+                Float.parseFloat(fields[index].getText());
+            } catch (NumberFormatException e) {
+                fields[index].setStyle("-fx-border-color: red;");
+                isValid = false;
+            }
+        }
+        if (isValid) {  //eğer sorun yoksa saveleme işlemine geçiyor
+            Artifact artifact = new Artifact();
+            artifact.setArtifactId(fields[0].getText());
+            artifact.setArtifactName(fields[1].getText());
+            artifact.setCategory(fields[2].getText());
+            artifact.setCivilization(fields[3].getText());
+            artifact.setDiscoveryLocation(fields[4].getText());
+            artifact.setComposition(fields[5].getText());
+            artifact.setDiscoveryDate(fields[6].getText());
+            artifact.setCurrentPlace(fields[7].getText());
+            Dimensions dimensions = new Dimensions();
+            dimensions.setWidth(Double.parseDouble(fields[8].getText()));
+            dimensions.setLength(Double.parseDouble(fields[9].getText()));
+            dimensions.setHeight(Double.parseDouble(fields[10].getText()));
+            artifact.setDimensions(dimensions);
+            artifact.setWeight(Double.parseDouble(fields[11].getText()));
+
+            List<String> selectedTags = new ArrayList<>();
+            for (CheckBox checkBox : tagCheckBoxes) {
+                if (checkBox.isSelected()) {
+                    selectedTags.add(checkBox.getText());
+                }
+            }
+            artifact.setTags(selectedTags);
+
+            catalog.addArtifact(artifact);
+            dialog.close();
+        }
     }
 
     public static void main(String[] args) {
