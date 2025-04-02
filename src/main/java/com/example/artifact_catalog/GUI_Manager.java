@@ -215,7 +215,7 @@ public class GUI_Manager extends Application {
         dialog.show();
     }
 
-    private void showArtifactDetails(String artifactId) {
+   /* private void showArtifactDetails(String artifactId) {
         Stage dialog = new Stage();
         dialog.setTitle("Artifact Details");
 
@@ -322,6 +322,127 @@ public class GUI_Manager extends Application {
         Scene scene = new Scene(vbox, 500, 450);
         dialog.setScene(scene);
         dialog.show();
+    }*/
+
+    private void showArtifactDetails(String artifactId) {
+        Stage dialog = new Stage();
+        dialog.setTitle("Artifact Details");
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10));
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        Artifact selectedArtifact = catalog.findArtifactById(artifactId);
+
+        if (selectedArtifact != null) {
+            TextField idField = new TextField(selectedArtifact.getArtifactId());
+            TextField nameField = new TextField(selectedArtifact.getArtifactName());
+            TextField categoryField = new TextField(selectedArtifact.getCategory());
+            TextField civilizationField = new TextField(selectedArtifact.getCivilization());
+            TextField locationField = new TextField(selectedArtifact.getDiscoveryLocation());
+            TextField compositionField = new TextField(selectedArtifact.getComposition());
+            TextField dateField = new TextField(selectedArtifact.getDiscoveryDate());
+            TextField placeField = new TextField(selectedArtifact.getCurrentPlace());
+            TextField widthField = new TextField(String.valueOf(selectedArtifact.getDimensions().getWidth()));
+            TextField lengthField = new TextField(String.valueOf(selectedArtifact.getDimensions().getLength()));
+            TextField heightField = new TextField(String.valueOf(selectedArtifact.getDimensions().getHeight()));
+            TextField weightField = new TextField(String.valueOf(selectedArtifact.getWeight()));
+
+            TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, dateField, placeField, widthField, lengthField, heightField, weightField};
+
+            for (TextField field : fields) {
+                field.setEditable(false);
+            }
+
+            CheckBox[] tagCheckBoxes = new CheckBox[tags.length];
+            for (int i = 0; i < tags.length; i++) {
+                tagCheckBoxes[i] = new CheckBox(tags[i]);
+                tagCheckBoxes[i].setDisable(true);
+                if (selectedArtifact.getTags().contains(tags[i])) {
+                    tagCheckBoxes[i].setSelected(true);
+                }
+            }
+
+            grid.add(new Label("ID:"), 0, 0);
+            grid.add(idField, 1, 0);
+            grid.add(new Label("Name:"), 0, 1);
+            grid.add(nameField, 1, 1);
+            grid.add(new Label("Category:"), 0, 2);
+            grid.add(categoryField, 1, 2);
+            grid.add(new Label("Civilization:"), 0, 3);
+            grid.add(civilizationField, 1, 3);
+            grid.add(new Label("Location:"), 0, 4);
+            grid.add(locationField, 1, 4);
+            grid.add(new Label("Composition:"), 0, 5);
+            grid.add(compositionField, 1, 5);
+            grid.add(new Label("Discovery Date:"), 0, 6);
+            grid.add(dateField, 1, 6);
+            grid.add(new Label("Current Place:"), 0, 7);
+            grid.add(placeField, 1, 7);
+            grid.add(new Label("Width:"), 0, 8);
+            grid.add(widthField, 1, 8);
+            grid.add(new Label("Length:"), 0, 9);
+            grid.add(lengthField, 1, 9);
+            grid.add(new Label("Height:"), 0, 10);
+            grid.add(heightField, 1, 10);
+            grid.add(new Label("Weight:"), 0, 11);
+            grid.add(weightField, 1, 11);
+
+            GridPane tagGrid = new GridPane();
+            tagGrid.setPadding(new Insets(10));
+            tagGrid.setHgap(10);
+            tagGrid.setVgap(10);
+            for (int i = 0; i < tags.length; i++) {
+                tagGrid.add(tagCheckBoxes[i], i % 3, i / 3);
+            }
+            grid.add(new Label("Tags:"), 0, 12);
+            grid.add(tagGrid, 1, 12);
+
+            Button editButton = new Button("Edit");
+            editButton.setOnAction(e -> {
+                for (TextField field : fields) {
+                    field.setEditable(true);
+                }
+                for (CheckBox checkBox : tagCheckBoxes) {
+                    checkBox.setDisable(false);
+                }
+                editButton.setText("Save");
+                editButton.setOnAction(saveEvent -> {
+                    selectedArtifact.setArtifactId(idField.getText());
+                    selectedArtifact.setArtifactName(nameField.getText());
+                    selectedArtifact.setCategory(categoryField.getText());
+                    selectedArtifact.setCivilization(civilizationField.getText());
+                    selectedArtifact.setDiscoveryLocation(locationField.getText());
+                    selectedArtifact.setComposition(compositionField.getText());
+                    selectedArtifact.setDiscoveryDate(dateField.getText());
+                    selectedArtifact.setCurrentPlace(placeField.getText());
+                    Dimensions dimensions = new Dimensions();
+                    dimensions.setWidth(Double.parseDouble(widthField.getText()));
+                    dimensions.setLength(Double.parseDouble(lengthField.getText()));
+                    dimensions.setHeight(Double.parseDouble(heightField.getText()));
+                    selectedArtifact.setDimensions(dimensions);
+                    selectedArtifact.setWeight(Double.parseDouble(weightField.getText()));
+
+                    List<String> selectedTags = new ArrayList<>();
+                    for (CheckBox checkBox : tagCheckBoxes) {
+                        if (checkBox.isSelected()) {
+                            selectedTags.add(checkBox.getText());
+                        }
+                    }
+                    selectedArtifact.setTags(selectedTags);
+
+                    catalog.editArtifact(artifactId, selectedArtifact);
+                    dialog.close();
+                });
+            });
+
+            grid.add(editButton, 1, 13);
+
+            Scene scene = new Scene(grid, 400, 600);
+            dialog.setScene(scene);
+            dialog.show();
+        }
     }
 
     private void saveArtifact(TextField[] fields, CheckBox[] tagCheckBoxes, Stage dialog) {
