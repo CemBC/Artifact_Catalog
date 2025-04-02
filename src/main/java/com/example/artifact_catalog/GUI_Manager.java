@@ -199,7 +199,7 @@ public class GUI_Manager extends Application {
 
         Button saveButton = new Button("Save");
         saveButton.setOnAction(e -> {  //Save butonuna basınca hata varsa kırmızı çerçeve oluşturuyor
-            saveArtifact(fields, tagCheckBoxes, dialog);
+            saveArtifact(fields, tagCheckBoxes, dialog , false);
         });
 
         grid.add(saveButton, 1, 13);
@@ -402,13 +402,17 @@ public class GUI_Manager extends Application {
             Button editButton = new Button("Edit");
             editButton.setOnAction(e -> {
                 for (TextField field : fields) {
-                    field.setEditable(true);
+                    if (field != idField) {
+                        field.setEditable(true);
+                    }
                 }
                 for (CheckBox checkBox : tagCheckBoxes) {
                     checkBox.setDisable(false);
                 }
                 editButton.setText("Save");
                 editButton.setOnAction(saveEvent -> {
+                    saveArtifact(fields , tagCheckBoxes, dialog ,true);
+                    /*
                     selectedArtifact.setArtifactId(idField.getText());
                     selectedArtifact.setArtifactName(nameField.getText());
                     selectedArtifact.setCategory(categoryField.getText());
@@ -434,8 +438,8 @@ public class GUI_Manager extends Application {
 
                     catalog.editArtifact(artifactId, selectedArtifact);
                     dialog.close();
-                });
-            });
+                 */});
+              });
 
             grid.add(editButton, 1, 13);
 
@@ -445,7 +449,7 @@ public class GUI_Manager extends Application {
         }
     }
 
-    private void saveArtifact(TextField[] fields, CheckBox[] tagCheckBoxes, Stage dialog) {
+    private void saveArtifact(TextField[] fields, CheckBox[] tagCheckBoxes, Stage dialog , boolean mode) {
         boolean isValid = true;
         for (TextField field : fields) {
             field.setStyle("");  //her save a basıldığında kırmızı çerçeveyi kaldırıyor , eğer düzelltiyse kırmızı çerçeve gözükmesin diye
@@ -492,8 +496,11 @@ public class GUI_Manager extends Application {
                 }
             }
             artifact.setTags(selectedTags);
-
-            catalog.addArtifact(artifact);
+            if(mode){
+                catalog.editArtifact(artifact);
+            }else {
+                catalog.addArtifact(artifact);
+            }
             dialog.close();
         }
     }

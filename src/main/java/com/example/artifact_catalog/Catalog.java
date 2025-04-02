@@ -36,15 +36,27 @@ public class Catalog {
         }
     }
 
-    public void editArtifact(String originalId, Artifact updatedArtifact) {
+    public void editArtifact(Artifact updatedArtifact) {
+        int pointer = 0;
         for (int i = 0; i < artifacts.size(); i++) {
-            if (artifacts.get(i).getArtifactId().equals(originalId)) {
-                artifacts.remove(i);
+            if (artifacts.get(i).getArtifactId().equals(updatedArtifact.getArtifactId())) {
+                pointer = i;
                 break;
             }
         }
 
-        artifacts.add(updatedArtifact);
+        artifacts.get(pointer).setArtifactName(updatedArtifact.getArtifactName());
+        artifacts.get(pointer).setCategory(updatedArtifact.getCategory());
+        artifacts.get(pointer).setCivilization(updatedArtifact.getCivilization());
+        artifacts.get(pointer).setDiscoveryLocation(updatedArtifact.getDiscoveryLocation());
+        artifacts.get(pointer).setComposition(updatedArtifact.getComposition());
+        artifacts.get(pointer).setDiscoveryDate(updatedArtifact.getDiscoveryDate());
+        artifacts.get(pointer).setCurrentPlace(updatedArtifact.getCurrentPlace());
+        artifacts.get(pointer).setDimensions(updatedArtifact.getDimensions());
+        artifacts.get(pointer).setWeight(updatedArtifact.getWeight());
+        artifacts.get(pointer).setTags(updatedArtifact.getTags());
+
+
         try {
             fileManager.writeAllArtifactsToFile(FILE_PATH, artifacts);
         } catch (IOException ex) {
