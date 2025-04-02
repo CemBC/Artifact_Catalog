@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -219,6 +220,7 @@ public class GUI_Manager extends Application {
         dialog.setTitle("Artifact Details");
 
         TableView<Map.Entry<String, String>> table = new TableView<>();
+        table.setEditable(false);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPrefWidth(500);
         table.setPrefHeight(400);
@@ -230,16 +232,17 @@ public class GUI_Manager extends Application {
         TableColumn<Map.Entry<String, String>, String> valueColumn = new TableColumn<>("Value");
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
 
+        valueColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        valueColumn.setOnEditCommit(event -> {
+            Map.Entry<String, String> entry = event.getRowValue();
+            entry.setValue(event.getNewValue());
+        });
+
         table.getColumns().addAll(attributeColumn, valueColumn);
 
         // Seçilen artifact'ı bul
-        Artifact selectedArtifact = null;
-        for (Artifact artifact : catalog.getArtifacts()) {
-            if (artifact.getArtifactId().equals(artifactId)) {
-                selectedArtifact = artifact;
-                break;
-            }
-        }
+        Artifact selectedArtifact = catalog.findArtifactById(artifactId);
+
 
         if (selectedArtifact != null) {
             ObservableList<Map.Entry<String, String>> data = FXCollections.observableArrayList();
@@ -261,7 +264,62 @@ public class GUI_Manager extends Application {
             table.setItems(data);
         }
 
-        Scene scene = new Scene(table, 500, 400);
+
+        Button editButton = new Button("Edit");
+        editButton.setOnAction(e -> {
+            if (editButton.getText().equals("Edit")) {
+                table.setEditable(true);
+                editButton.setText("Save");
+            } else {
+                if (selectedArtifact != null) {
+                    for (Map.Entry<String, String> entry : table.getItems()) {
+                        switch (entry.getKey()) {
+                            case "ID":
+                                selectedArtifact.setArtifactId(entry.getValue());
+                                break;
+                            case "Name":
+                                selectedArtifact.setArtifactName(entry.getValue());
+                                break;
+                            case "Category":
+                                selectedArtifact.setCategory(entry.getValue());
+                                break;
+                            case "Civilization":
+                                selectedArtifact.setCivilization(entry.getValue());
+                                break;
+                            case "Location":
+                                selectedArtifact.setDiscoveryLocation(entry.getValue());
+                                break;
+                            case "Composition":
+                                selectedArtifact.setComposition(entry.getValue());
+                                break;
+                            case "Discovery Date":
+                                selectedArtifact.setDiscoveryDate(entry.getValue());
+                                break;
+                            case "Current Place":
+                                selectedArtifact.setCurrentPlace(entry.getValue());
+                                break;
+                            case "Dimensions":
+                                String[] dimensions = entry.getValue().split(", ");
+                                selectedArtifact.getDimensions().setWidth(Double.parseDouble(dimensions[0].split(": ")[1]));
+                                selectedArtifact.getDimensions().setLength(Double.parseDouble(dimensions[1].split(": ")[1]));
+                                selectedArtifact.getDimensions().setHeight(Double.parseDouble(dimensions[2].split(": ")[1]));
+                                break;
+                            case "Weight":
+                                selectedArtifact.setWeight(Double.parseDouble(entry.getValue()));
+                                break;
+                            case "Tags":
+                                selectedArtifact.setTags(List.of(entry.getValue().split(", ")));
+                                break;
+                        }
+                    }
+                    catalog.editArtifact(selectedArtifact);
+                }
+                dialog.close();
+            }
+        });
+
+        VBox vbox = new VBox(table, editButton);
+        Scene scene = new Scene(vbox, 500, 450);
         dialog.setScene(scene);
         dialog.show();
     }

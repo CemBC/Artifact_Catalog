@@ -36,6 +36,27 @@ public class Catalog {
         }
     }
 
+    public void editArtifact(Artifact updatedArtifact) {
+        for (int i = 0; i < artifacts.size(); i++) {
+            if (artifacts.get(i).getArtifactId().equals(updatedArtifact.getArtifactId())) {
+                artifacts.set(i, updatedArtifact);
+                break;
+            }
+        }
+        try {
+            fileManager.writeAllArtifactsToFile(FILE_PATH, artifacts);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    public Artifact findArtifactById(String artifactId) {
+        for (Artifact artifact : artifacts) {
+            if (artifact.getArtifactId().equals(artifactId)) {
+                return artifact;
+            }
+        }
+        return null;
+    }
 
     public void loadArtifactsFromFile() throws IOException {
         List<Artifact> artifacts = fileManager.readArtifactsFromFile(FILE_PATH);
