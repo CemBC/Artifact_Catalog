@@ -136,6 +136,29 @@ public class GUI_Manager extends Application {
         TextField heightField = new TextField();
         TextField weightField = new TextField();
 
+        TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, dateField, placeField, widthField, lengthField, heightField, weightField};
+
+        for (int i = 0; i < fields.length; i++) {
+            final int index = i;
+            fields[i].setOnKeyPressed(event -> {
+                switch (event.getCode()) {
+                    case ENTER:
+                    case DOWN:
+                        if (index < fields.length - 1) {
+                            fields[index + 1].requestFocus();
+                        }
+                        break;
+                    case UP:
+                        if (index > 0) {
+                            fields[index - 1].requestFocus();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+
         grid.add(new Label("ID:"), 0, 0);
         grid.add(idField, 1, 0);
         grid.add(new Label("Name:"), 0, 1);
@@ -175,10 +198,6 @@ public class GUI_Manager extends Application {
 
         Button saveButton = new Button("Save");
         saveButton.setOnAction(e -> {  //Save butonuna basınca hata varsa kırmızı çerçeve oluşturuyor
-            TextField[] fields = {idField, nameField,   //if else i kısaltmak için for döngüsünde döndürülecek fieldlar
-                    categoryField, civilizationField, locationField,
-                    compositionField, dateField, placeField,
-                    widthField, lengthField, heightField, weightField};
             saveArtifact(fields, tagCheckBoxes, dialog);
         });
 
