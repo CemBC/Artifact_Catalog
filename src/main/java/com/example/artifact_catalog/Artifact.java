@@ -18,44 +18,105 @@ public class Artifact {
     private String imagePath;
 
 
-    public Artifact() {}
+    public Artifact() {
+    }
 
 
-    public String getArtifactId() { return artifactId; }
-    public void setArtifactId(String artifactId) { this.artifactId = artifactId; }
+    public String getArtifactId() {
+        return artifactId;
+    }
 
-    public String getArtifactName() { return artifactName; }
-    public void setArtifactName(String artifactName) { this.artifactName = artifactName; }
+    public void setArtifactId(String artifactId) {
+        this.artifactId = artifactId;
+    }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public String getArtifactName() {
+        return artifactName;
+    }
 
-    public String getCivilization() { return civilization; }
-    public void setCivilization(String civilization) { this.civilization = civilization; }
+    public void setArtifactName(String artifactName) {
+        this.artifactName = artifactName;
+    }
 
-    public String getDiscoveryLocation() { return discoveryLocation; }
-    public void setDiscoveryLocation(String discoveryLocation) { this.discoveryLocation = discoveryLocation; }
+    public String getCategory() {
+        return category;
+    }
 
-    public String getComposition() { return composition; }
-    public void setComposition(String composition) { this.composition = composition; }
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
-    public String getDiscoveryDate() { return discoveryDate; }
-    public void setDiscoveryDate(String discoveryDate) { this.discoveryDate = discoveryDate; }
+    public String getCivilization() {
+        return civilization;
+    }
 
-    public String getCurrentPlace() { return currentPlace; }
-    public void setCurrentPlace(String currentPlace) { this.currentPlace = currentPlace; }
+    public void setCivilization(String civilization) {
+        this.civilization = civilization;
+    }
 
-    public Dimensions getDimensions() { return dimensions; }
-    public void setDimensions(Dimensions dimensions) { this.dimensions = dimensions; }
+    public String getDiscoveryLocation() {
+        return discoveryLocation;
+    }
 
-    public double getWeight() { return weight; }
-    public void setWeight(double weight) { this.weight = weight; }
+    public void setDiscoveryLocation(String discoveryLocation) {
+        this.discoveryLocation = discoveryLocation;
+    }
 
-    public List<String> getTags() { return tags; }
-    public void setTags(List<String> tags) { this.tags = tags; }
+    public String getComposition() {
+        return composition;
+    }
 
-    public String getImagePath() { return imagePath; }
-    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+    public void setComposition(String composition) {
+        this.composition = composition;
+    }
+
+    public String getDiscoveryDate() {
+        return discoveryDate;
+    }
+
+    public void setDiscoveryDate(String discoveryDate) {
+        this.discoveryDate = discoveryDate;
+    }
+
+    public String getCurrentPlace() {
+        return currentPlace;
+    }
+
+    public void setCurrentPlace(String currentPlace) {
+        this.currentPlace = currentPlace;
+    }
+
+    public Dimensions getDimensions() {
+        return dimensions;
+    }
+
+    public void setDimensions(Dimensions dimensions) {
+        this.dimensions = dimensions;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -79,7 +140,7 @@ public class Artifact {
     @Override
     public int hashCode() {
         return Objects.hash(artifactId, artifactName, category, civilization, discoveryLocation,
-                composition, discoveryDate, currentPlace, dimensions, weight, tags , imagePath);
+                composition, discoveryDate, currentPlace, dimensions, weight, tags, imagePath);
     }
 
 

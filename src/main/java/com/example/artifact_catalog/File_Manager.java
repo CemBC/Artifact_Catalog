@@ -1,6 +1,8 @@
 package com.example.artifact_catalog;
 
+import javafx.scene.control.Alert;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -14,46 +16,56 @@ public class File_Manager {
 
     public List<Artifact> readArtifactsFromFile(String filePath) throws IOException {
         Path path = Paths.get(filePath);
-        if(Files.notExists(path)){
+        if (Files.notExists(path)) {
             Files.createFile(path);
             Files.write(path, "[]".getBytes());
         }
 
-        String content = new String(Files.readAllBytes(path));
-        JSONArray jsonArray = new JSONArray(content);
+        try {
+            String content = new String(Files.readAllBytes(path));
+            JSONArray jsonArray = new JSONArray(content);
 
-        List<Artifact> artifacts = new ArrayList<>();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
-            Artifact artifact = new Artifact();
-            artifact.setArtifactId(jsonObject.getString("artifactid"));
-            artifact.setArtifactName(jsonObject.getString("artifactname"));
-            artifact.setCategory(jsonObject.getString("category"));
-            artifact.setCivilization(jsonObject.getString("civilization"));
-            artifact.setDiscoveryLocation(jsonObject.getString("discoverylocation"));
-            artifact.setComposition(jsonObject.getString("composition"));
-            artifact.setDiscoveryDate(jsonObject.getString("discoverydate"));
-            artifact.setCurrentPlace(jsonObject.getString("currentplace"));
-            artifact.setImagePath(jsonObject.optString("imagePath", ""));
+            List<Artifact> artifacts = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                Artifact artifact = new Artifact();
+                artifact.setArtifactId(jsonObject.getString("artifactid"));
+                artifact.setArtifactName(jsonObject.getString("artifactname"));
+                artifact.setCategory(jsonObject.getString("category"));
+                artifact.setCivilization(jsonObject.getString("civilization"));
+                artifact.setDiscoveryLocation(jsonObject.getString("discoverylocation"));
+                artifact.setComposition(jsonObject.getString("composition"));
+                artifact.setDiscoveryDate(jsonObject.getString("discoverydate"));
+                artifact.setCurrentPlace(jsonObject.getString("currentplace"));
+                artifact.setImagePath(jsonObject.optString("imagePath", ""));
 
-            JSONObject dimensionsObject = jsonObject.getJSONObject("dimensions");
-            Dimensions dimensions = new Dimensions();
-            dimensions.setWidth(dimensionsObject.getDouble("width"));
-            dimensions.setLength(dimensionsObject.getDouble("length"));
-            dimensions.setHeight(dimensionsObject.getDouble("height"));
-            artifact.setDimensions(dimensions);
-            artifact.setWeight(jsonObject.getDouble("weight"));
-            JSONArray tagsArray = jsonObject.getJSONArray("tags");
+                JSONObject dimensionsObject = jsonObject.getJSONObject("dimensions");
+                Dimensions dimensions = new Dimensions();
+                dimensions.setWidth(dimensionsObject.getDouble("width"));
+                dimensions.setLength(dimensionsObject.getDouble("length"));
+                dimensions.setHeight(dimensionsObject.getDouble("height"));
+                artifact.setDimensions(dimensions);
+                artifact.setWeight(jsonObject.getDouble("weight"));
+                JSONArray tagsArray = jsonObject.getJSONArray("tags");
 
-            List<String> tags = new ArrayList<>();
-            for (int j = 0; j < tagsArray.length(); j++) {
-                tags.add(tagsArray.getString(j));
+                List<String> tags = new ArrayList<>();
+                for (int j = 0; j < tagsArray.length(); j++) {
+                    tags.add(tagsArray.getString(j));
+                }
+                artifact.setTags(tags);
+                artifacts.add(artifact);
             }
-            artifact.setTags(tags);
-            artifacts.add(artifact);
+            return artifacts;
+        } catch (JSONException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("File Read Error");
+            alert.setHeaderText("An error occurred while reading the file. The json file should be named artifacts.json and be in the documents directory. Or the json format is corrupted");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+            throw e;
         }
-        return artifacts;
     }
+
 
     public void writeArtifactsToFile(String filePath, Artifact artifact) throws IOException {
         Path path = Paths.get(filePath);
@@ -87,6 +99,7 @@ public class File_Manager {
         jsonArray.put(jsonObject);
         Files.write(path, (jsonArray.toString(4) + "\n").getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
     }
+
     public void writeAllArtifactsToFile(String filePath, List<Artifact> artifacts) throws IOException {
         Path path = Paths.get(filePath);
         if (Files.notExists(path)) {

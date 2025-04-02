@@ -10,7 +10,7 @@ public class Catalog {
     private static final String FILE_PATH = System.getProperty("user.home") + "/Documents/artifacts.json";
 
     public Catalog() {
-        this.artifacts =new ArrayList<>();
+        this.artifacts = new ArrayList<>();
         this.fileManager = new File_Manager();
     }
 
@@ -84,6 +84,7 @@ public class Catalog {
         return filteredArtifacts; //filteredArtifacts döndürülecek
         //burada artifacts listesini setlemiyoruz çünkü o zaman listemiz değişmiş olur , sadece filterlamaya çalışıyoruz
     }
+
     public List<Artifact> getArtifacts() {
         return artifacts;
     }

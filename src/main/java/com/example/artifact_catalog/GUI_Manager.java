@@ -15,13 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.AbstractMap;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class GUI_Manager extends Application {
-    private Catalog catalog =new Catalog();
+    private Catalog catalog = new Catalog();
     private final String[] tags = {"tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9"};
     private CheckBox[] tagCheckBoxes = new CheckBox[tags.length];
     //private SearchManager searchManager = new SearchManager();
@@ -41,10 +42,10 @@ public class GUI_Manager extends Application {
         scrollPane.setPrefViewportHeight(200); // ScrollPane'in yüksekliğini ayarlıyoruz
 
         // ListView'a selection listener ekliyoruz
-        listView.setOnMouseClicked(event->{
-            if(event.getClickCount()==2){  //Çift tıklama ile edit butonunu etkinleştirme eklendi
+        listView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {  //Çift tıklama ile edit butonunu etkinleştirme eklendi
                 String selectedItem = listView.getSelectionModel().getSelectedItem();
-                if (selectedItem!=null){
+                if (selectedItem != null) {
                     String artifactId = selectedItem.substring(selectedItem.indexOf('(') + 1, selectedItem.indexOf(')'));
                     showArtifactDetails(artifactId);
                 }
@@ -65,7 +66,7 @@ public class GUI_Manager extends Application {
             }
             try {
                 catalog.loadArtifactsFromFile();  //burdaki methodda okuyor verileri
-                List<Artifact> artifacts = catalog.getFilteredArtifacts(data , selectedTags); //Search Butonu yerine load butonuna search mantığı uygulandı
+                List<Artifact> artifacts = catalog.getFilteredArtifacts(data, selectedTags); //Search Butonu yerine load butonuna search mantığı uygulandı
                 listView.getItems().clear();
                 for (Artifact artifact : artifacts) {
                     listView.getItems().add(artifact.getArtifactName() + " (" + artifact.getArtifactId() + ")");
@@ -76,14 +77,12 @@ public class GUI_Manager extends Application {
         });
 
 
-
         HBox tagBox = new HBox(10); // 10 piksel boşluk ile
         tagBox.setPadding(new Insets(10));
         for (int i = 0; i < tags.length; i++) {
             tagCheckBoxes[i] = new CheckBox(tags[i]);
             tagBox.getChildren().add(tagCheckBoxes[i]);
         }
-
 
 
         Button addButton = new Button("Add Artifact");
@@ -199,7 +198,7 @@ public class GUI_Manager extends Application {
 
         Button saveButton = new Button("Save");
         saveButton.setOnAction(e -> {  //Save butonuna basınca hata varsa kırmızı çerçeve oluşturuyor
-            saveArtifact(fields, tagCheckBoxes, dialog , false);
+            saveArtifact(fields, tagCheckBoxes, dialog, false);
         });
 
         grid.add(saveButton, 1, 13);
@@ -411,7 +410,7 @@ public class GUI_Manager extends Application {
                 }
                 editButton.setText("Save");
                 editButton.setOnAction(saveEvent -> {
-                    saveArtifact(fields , tagCheckBoxes, dialog ,true);
+                    saveArtifact(fields, tagCheckBoxes, dialog, true);
                     /*
                     selectedArtifact.setArtifactId(idField.getText());
                     selectedArtifact.setArtifactName(nameField.getText());
@@ -438,8 +437,9 @@ public class GUI_Manager extends Application {
 
                     catalog.editArtifact(artifactId, selectedArtifact);
                     dialog.close();
-                 */});
-              });
+                 */
+                });
+            });
 
             grid.add(editButton, 1, 13);
 
@@ -449,7 +449,7 @@ public class GUI_Manager extends Application {
         }
     }
 
-    private void saveArtifact(TextField[] fields, CheckBox[] tagCheckBoxes, Stage dialog , boolean mode) {
+    private void saveArtifact(TextField[] fields, CheckBox[] tagCheckBoxes, Stage dialog, boolean mode) {
         boolean isValid = true;
         for (TextField field : fields) {
             field.setStyle("");  //her save a basıldığında kırmızı çerçeveyi kaldırıyor , eğer düzelltiyse kırmızı çerçeve gözükmesin diye
@@ -496,9 +496,9 @@ public class GUI_Manager extends Application {
                 }
             }
             artifact.setTags(selectedTags);
-            if(mode){
+            if (mode) {
                 catalog.editArtifact(artifact);
-            }else {
+            } else {
                 catalog.addArtifact(artifact);
             }
             dialog.close();

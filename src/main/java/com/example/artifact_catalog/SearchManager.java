@@ -7,11 +7,11 @@ import java.util.List;
 public class SearchManager {
 
 
-    public List<Artifact> searchAndFilterArtifacts(List<Artifact> artifacts, String data , List<String> tags) {
+    public List<Artifact> searchAndFilterArtifacts(List<Artifact> artifacts, String data, List<String> tags) {
         List<Artifact> result = new ArrayList<>();
-        if(data.isEmpty()){
-           result = artifacts;
-        }else {
+        if (data.isEmpty()) {
+            result = artifacts;
+        } else {
             String[] splitted = data.toLowerCase().split(",");
             for (int i = 0; i < splitted.length; i++) {
                 splitted[i] = splitted[i].trim();
@@ -31,7 +31,7 @@ public class SearchManager {
 
     private boolean matched(Artifact artifact, String[] splitted) {
         for (String term : splitted) {
-            if (!artifactMatched(artifact, term )) {
+            if (!artifactMatched(artifact, term)) {
                 return false;
             }
         }
@@ -39,8 +39,7 @@ public class SearchManager {
     }
 
 
-
-    private boolean artifactMatched(Artifact artifact, String term ) {
+    private boolean artifactMatched(Artifact artifact, String term) {
 
 
         return artifact.getArtifactId().toLowerCase().contains(term) ||
