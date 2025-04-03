@@ -1,6 +1,7 @@
 package com.example.artifact_catalog;
 
 import javafx.scene.control.Alert;
+import javafx.stage.Modality;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,7 +62,7 @@ public class File_Manager {
             alert.setTitle("File Read Error");
             alert.setHeaderText("An error occurred while reading the file. The json file should be named artifacts.json and be in the documents directory. Or the json format is corrupted");
             alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            alert.initModality(Modality.NONE);
             throw e;
         }
     }

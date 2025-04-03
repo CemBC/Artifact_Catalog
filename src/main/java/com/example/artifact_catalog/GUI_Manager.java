@@ -4,36 +4,73 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
+
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.AbstractMap;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 public class GUI_Manager extends Application {
     private Catalog catalog = new Catalog();
     private final String[] tags = {"tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9"};
     private CheckBox[] tagCheckBoxes = new CheckBox[tags.length];
+    private final String  path = System.getProperty("user.home") + "/Documents/artifacts.json";
+    private final String downloadsPath = System.getProperty("user.home") + "/Downloads/exported_artifacts.json";
     //private SearchManager searchManager = new SearchManager();
 
     @Override
     public void start(Stage primaryStage) {
+        File_Manager fileManager = new File_Manager();
         primaryStage.setTitle("Artifact Manager");
 
         VBox vbox = new VBox();
         vbox.setPadding(new Insets(10));
         vbox.setSpacing(10);
+
+        Button importButton = new Button("Import data"); //Import Button yerini değiştirebilirsiniz
+
+        importButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();  //File Chooser ile yeni aktarılacak dosya seçiliyor
+            fileChooser.setTitle("Select JSON File");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+            File selectedFile = fileChooser.showOpenDialog(primaryStage);
+            if (selectedFile != null) {
+                try {
+                    List<Artifact> ImportedData = fileManager.readArtifactsFromFile(selectedFile.getAbsolutePath()); //Pathı al ve Pathteki dosya içeriğini listeye aktar
+                    fileManager.writeAllArtifactsToFile(path, ImportedData); //Listeyi belgelerde zaten hazır açılı olan json dosyasına aktar
+                    Files.delete(selectedFile.toPath());  //Seçilen dosyayı sil
+                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        Button exportButton = new Button("Export data");
+
+        exportButton.setOnAction(e -> {
+            try {
+                List<Artifact> exportedData = fileManager.readArtifactsFromFile(path); //Belgelerdeki json dosyasını oku ve listeye aktar
+                fileManager.writeAllArtifactsToFile(downloadsPath, exportedData);   //Dosyayı Downloads'a aktar
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Export Successful");
+                alert.setHeaderText(null);
+                alert.setContentText("Data exported to: " + downloadsPath);
+                alert.initModality(Modality.NONE);  //Modality.NONE olunca alerti kapatmana gerek yok
+                alert.show();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
 
         Button loadButton = new Button("Load Artifacts");
         ListView<String> listView = new ListView<>();
@@ -107,7 +144,7 @@ public class GUI_Manager extends Application {
         HBox buttonBox = new HBox(10); // 10 piksel boşluk ile
         buttonBox.getChildren().addAll(addButton, removeButton);
 
-        vbox.getChildren().addAll(loadButton, searchField, tagBox, scrollPane, buttonBox);
+        vbox.getChildren().addAll(loadButton, importButton,exportButton, searchField, tagBox, scrollPane, buttonBox);
 
         Scene scene = new Scene(vbox, 600, 400);
         primaryStage.setScene(scene);
