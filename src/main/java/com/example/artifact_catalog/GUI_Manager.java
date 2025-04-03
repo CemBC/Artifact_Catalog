@@ -7,10 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
@@ -38,6 +35,7 @@ public class GUI_Manager extends Application {
 
     private void showWelcomeScreen(Stage primaryStage) {
         Stage welcomeStage = new Stage();
+        welcomeStage.setResizable(false);
         welcomeStage.setTitle("Artifact Catalog");
 
         VBox vbox = new VBox(20);
@@ -81,6 +79,7 @@ public class GUI_Manager extends Application {
 
     private void showMainScreen(Stage primaryStage) {
         File_Manager fileManager = new File_Manager();
+        primaryStage.setResizable(false);
         primaryStage.setTitle("Artifact Manager");
 
         VBox vbox = new VBox();
@@ -125,6 +124,7 @@ public class GUI_Manager extends Application {
 
         Button loadButton = new Button("Load Artifacts");
         ListView<String> listView = new ListView<>();
+
         ScrollPane scrollPane = new ScrollPane(listView);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefViewportHeight(200); // ScrollPane'in yüksekliğini ayarlıyoruz
@@ -204,6 +204,7 @@ public class GUI_Manager extends Application {
 
     private void showAddArtifactDialog() {
         Stage dialog = new Stage();
+        dialog.setResizable(false);
         dialog.setTitle("Add Artifact");
 
         GridPane grid = new GridPane();
@@ -298,128 +299,17 @@ public class GUI_Manager extends Application {
 
         grid.add(saveButton, 1, 14);
 
-        ScrollPane scrollPane = new ScrollPane(grid);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setFitToHeight(true);
-        scrollPane.setPrefViewportWidth(400);
-        scrollPane.setPrefViewportHeight(400);
+        ;
 
-        Scene scene = new Scene(scrollPane, 400, 400);
+        Scene scene = new Scene(grid, 400, 650);
         dialog.setScene(scene);
         dialog.show();
     }
 
-   /* private void showArtifactDetails(String artifactId) {
-        Stage dialog = new Stage();
-        dialog.setTitle("Artifact Details");
-
-        TableView<Map.Entry<String, String>> table = new TableView<>();
-        table.setEditable(false);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        table.setPrefWidth(500);
-        table.setPrefHeight(400);
-
-        TableColumn<Map.Entry<String, String>, String> attributeColumn = new TableColumn<>("Attribute");
-        attributeColumn.setCellValueFactory(new PropertyValueFactory<>("key"));
-        attributeColumn.setStyle("-fx-font-weight: bold;");
-
-        TableColumn<Map.Entry<String, String>, String> valueColumn = new TableColumn<>("Value");
-        valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
-
-        valueColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        valueColumn.setOnEditCommit(event -> {
-            Map.Entry<String, String> entry = event.getRowValue();
-            entry.setValue(event.getNewValue());
-        });
-
-        table.getColumns().addAll(attributeColumn, valueColumn);
-
-        // Seçilen artifact'ı bul
-        Artifact selectedArtifact = catalog.findArtifactById(artifactId);
-
-
-        if (selectedArtifact != null) {
-            ObservableList<Map.Entry<String, String>> data = FXCollections.observableArrayList();
-            data.add(new AbstractMap.SimpleEntry<>("ID", selectedArtifact.getArtifactId()));
-            data.add(new AbstractMap.SimpleEntry<>("Name", selectedArtifact.getArtifactName()));
-            data.add(new AbstractMap.SimpleEntry<>("Category", selectedArtifact.getCategory()));
-            data.add(new AbstractMap.SimpleEntry<>("Civilization", selectedArtifact.getCivilization()));
-            data.add(new AbstractMap.SimpleEntry<>("Location", selectedArtifact.getDiscoveryLocation()));
-            data.add(new AbstractMap.SimpleEntry<>("Composition", selectedArtifact.getComposition()));
-            data.add(new AbstractMap.SimpleEntry<>("Discovery Date", selectedArtifact.getDiscoveryDate()));
-            data.add(new AbstractMap.SimpleEntry<>("Current Place", selectedArtifact.getCurrentPlace()));
-            data.add(new AbstractMap.SimpleEntry<>("Dimensions", String.format("Width: %.2f, Length: %.2f, Height: %.2f",
-                    selectedArtifact.getDimensions().getWidth(),
-                    selectedArtifact.getDimensions().getLength(),
-                    selectedArtifact.getDimensions().getHeight())));
-            data.add(new AbstractMap.SimpleEntry<>("Weight", String.format("%.2f", selectedArtifact.getWeight())));
-            data.add(new AbstractMap.SimpleEntry<>("Tags", String.join(", ", selectedArtifact.getTags())));
-
-            table.setItems(data);
-        }
-
-
-        Button editButton = new Button("Edit");
-        editButton.setOnAction(e -> {
-            if (editButton.getText().equals("Edit")) {
-                table.setEditable(true);
-                editButton.setText("Save");
-            } else {
-                if (selectedArtifact != null) {
-                    for (Map.Entry<String, String> entry : table.getItems()) {
-                        switch (entry.getKey()) {
-                            case "ID":
-                                selectedArtifact.setArtifactId(entry.getValue());
-                                break;
-                            case "Name":
-                                selectedArtifact.setArtifactName(entry.getValue());
-                                break;
-                            case "Category":
-                                selectedArtifact.setCategory(entry.getValue());
-                                break;
-                            case "Civilization":
-                                selectedArtifact.setCivilization(entry.getValue());
-                                break;
-                            case "Location":
-                                selectedArtifact.setDiscoveryLocation(entry.getValue());
-                                break;
-                            case "Composition":
-                                selectedArtifact.setComposition(entry.getValue());
-                                break;
-                            case "Discovery Date":
-                                selectedArtifact.setDiscoveryDate(entry.getValue());
-                                break;
-                            case "Current Place":
-                                selectedArtifact.setCurrentPlace(entry.getValue());
-                                break;
-                            case "Dimensions":
-                                String[] dimensions = entry.getValue().split(", ");
-                                selectedArtifact.getDimensions().setWidth(Double.parseDouble(dimensions[0].split(": ")[1]));
-                                selectedArtifact.getDimensions().setLength(Double.parseDouble(dimensions[1].split(": ")[1]));
-                                selectedArtifact.getDimensions().setHeight(Double.parseDouble(dimensions[2].split(": ")[1]));
-                                break;
-                            case "Weight":
-                                selectedArtifact.setWeight(Double.parseDouble(entry.getValue()));
-                                break;
-                            case "Tags":
-                                selectedArtifact.setTags(List.of(entry.getValue().split(", ")));
-                                break;
-                        }
-                    }
-                    catalog.editArtifact(selectedArtifact);
-                }
-                dialog.close();
-            }
-        });
-
-        VBox vbox = new VBox(table, editButton);
-        Scene scene = new Scene(vbox, 500, 450);
-        dialog.setScene(scene);
-        dialog.show();
-    }*/
 
     private void showArtifactDetails(String artifactId) {
         Stage dialog = new Stage();
+        dialog.setResizable(false);
         dialog.setTitle("Artifact Details");
 
         GridPane grid = new GridPane();
@@ -531,7 +421,13 @@ public class GUI_Manager extends Application {
 
             grid.add(editButton, 1, 15);
 
-            Scene scene = new Scene(grid, 400, 600);
+            ScrollPane scrollPane = new ScrollPane(grid);
+            scrollPane.setFitToWidth(true);
+            scrollPane.setFitToHeight(true);
+            scrollPane.setPrefViewportWidth(400);
+            scrollPane.setPrefViewportHeight(400);
+
+            Scene scene = new Scene(scrollPane, 400, 650);
             dialog.setScene(scene);
             dialog.show();
         }
