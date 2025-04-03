@@ -2,15 +2,16 @@ package com.example.artifact_catalog;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
+import javafx.scene.text.TextAlignment;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +30,42 @@ public class GUI_Manager extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        showWelcomeScreen(primaryStage);
+    }
+
+    private void showWelcomeScreen(Stage primaryStage) {
+        Stage welcomeStage = new Stage();
+        welcomeStage.setTitle("Artifact Catalog");
+
+        VBox vbox = new VBox(20);
+        vbox.setPadding(new Insets(20));
+        vbox.setAlignment(Pos.CENTER);
+
+        Label titleLabel = new Label("ARTIFACT CATALOG RROJECT");
+        titleLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-font-family: 'Times New Roman';");
+
+        Label welcomeLabel = new Label("WELCOME");
+        welcomeLabel.setStyle("-fx-font-size: 18px; -fx-font-family: 'Times New Roman';");
+
+        Label authorsLabel = new Label("PREPARED BY:\nOrkun Efe Özdemir\nCem Başar Ceylani\nBetül Özsan\nAleyna Kök");
+        authorsLabel.setStyle("-fx-font-size: 14px; -fx-font-family: 'Times New Roman';");
+        authorsLabel.setTextAlignment(TextAlignment.CENTER);
+
+        Button continueButton = new Button("CONTINUE");
+        continueButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px 20px; -fx-font-family: 'Times New Roman';");
+        continueButton.setOnAction(e -> {
+            welcomeStage.close();
+            showMainScreen(primaryStage);
+        });
+
+        vbox.getChildren().addAll(titleLabel, welcomeLabel, authorsLabel, continueButton);
+
+        Scene scene = new Scene(vbox, 400, 400);
+        welcomeStage.setScene(scene);
+        welcomeStage.show();
+    }
+
+    private void showMainScreen(Stage primaryStage) {
         File_Manager fileManager = new File_Manager();
         primaryStage.setTitle("Artifact Manager");
 
@@ -457,10 +494,10 @@ public class GUI_Manager extends Application {
                     selectedArtifact.setComposition(compositionField.getText());
                     selectedArtifact.setDiscoveryDate(dateField.getText());
                     selectedArtifact.setCurrentPlace(placeField.getText());
-                    Dimensions dimensions = new Dimensions();
-                    dimensions.setWidth(Double.parseDouble(widthField.getText()));
-                    dimensions.setLength(Double.parseDouble(lengthField.getText()));
-                    dimensions.setHeight(Double.parseDouble(heightField.getText()));
+            Dimensions dimensions = new Dimensions();
+            dimensions.setWidth(Double.parseDouble(widthField.getText()));
+            dimensions.setLength(Double.parseDouble(lengthField.getText()));
+            dimensions.setHeight(Double.parseDouble(heightField.getText()));
                     selectedArtifact.setDimensions(dimensions);
                     selectedArtifact.setWeight(Double.parseDouble(weightField.getText()));
 
