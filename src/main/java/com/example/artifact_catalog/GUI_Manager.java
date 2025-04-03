@@ -5,6 +5,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -172,8 +174,14 @@ public class GUI_Manager extends Application {
         TextField lengthField = new TextField();
         TextField heightField = new TextField();
         TextField weightField = new TextField();
+        TextField imagePathField = new TextField();
+        Button selectImageButton = new Button("Select Image");
 
-        TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, dateField, placeField, widthField, lengthField, heightField, weightField};
+        selectImageButton.setOnAction(e -> {
+            selectImage(dialog, imagePathField);
+        });
+
+        TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, dateField, placeField, widthField, lengthField, heightField, weightField, imagePathField};
 
         for (int i = 0; i < fields.length; i++) {
             final int index = i;
@@ -220,6 +228,9 @@ public class GUI_Manager extends Application {
         grid.add(heightField, 1, 10);
         grid.add(new Label("Weight:"), 0, 11);
         grid.add(weightField, 1, 11);
+        grid.add(new Label("Image Path:"), 0, 12);
+        grid.add(imagePathField, 1, 12);
+        grid.add(selectImageButton, 2, 12);
 
         GridPane tagGrid = new GridPane();
         tagGrid.setPadding(new Insets(10));
@@ -230,15 +241,13 @@ public class GUI_Manager extends Application {
             tagCheckBoxes[i] = new CheckBox(tags[i]);
             tagGrid.add(tagCheckBoxes[i], i % 3, i / 3);
         }
-        grid.add(new Label("Tags:"), 0, 12);
-        grid.add(tagGrid, 1, 12);
+        grid.add(new Label("Tags:"), 0, 13);
+        grid.add(tagGrid, 1, 13);
 
         Button saveButton = new Button("Save");
-        saveButton.setOnAction(e -> {  //Save butonuna basınca hata varsa kırmızı çerçeve oluşturuyor
-            saveArtifact(fields, tagCheckBoxes, dialog, false);
-        });
+        saveButton.setOnAction(e -> saveArtifact(fields, tagCheckBoxes, dialog, false));
 
-        grid.add(saveButton, 1, 13);
+        grid.add(saveButton, 1, 14);
 
         ScrollPane scrollPane = new ScrollPane(grid);
         scrollPane.setFitToWidth(true);
@@ -384,8 +393,16 @@ public class GUI_Manager extends Application {
             TextField lengthField = new TextField(String.valueOf(selectedArtifact.getDimensions().getLength()));
             TextField heightField = new TextField(String.valueOf(selectedArtifact.getDimensions().getHeight()));
             TextField weightField = new TextField(String.valueOf(selectedArtifact.getWeight()));
+            TextField imagePathField = new TextField(selectedArtifact.getImagePath());
 
-            TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, dateField, placeField, widthField, lengthField, heightField, weightField};
+            ImageView imageView = new ImageView();
+            if (!selectedArtifact.getImagePath().isEmpty()) {
+                imageView.setImage(new Image("file:" + selectedArtifact.getImagePath()));
+            }
+            imageView.setFitWidth(200);
+            imageView.setPreserveRatio(true);
+
+            TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, dateField, placeField, widthField, lengthField, heightField, weightField, imagePathField};
 
             for (TextField field : fields) {
                 field.setEditable(false);
@@ -400,30 +417,33 @@ public class GUI_Manager extends Application {
                 }
             }
 
-            grid.add(new Label("ID:"), 0, 0);
-            grid.add(idField, 1, 0);
-            grid.add(new Label("Name:"), 0, 1);
-            grid.add(nameField, 1, 1);
-            grid.add(new Label("Category:"), 0, 2);
-            grid.add(categoryField, 1, 2);
-            grid.add(new Label("Civilization:"), 0, 3);
-            grid.add(civilizationField, 1, 3);
-            grid.add(new Label("Location:"), 0, 4);
-            grid.add(locationField, 1, 4);
-            grid.add(new Label("Composition:"), 0, 5);
-            grid.add(compositionField, 1, 5);
-            grid.add(new Label("Discovery Date:"), 0, 6);
-            grid.add(dateField, 1, 6);
-            grid.add(new Label("Current Place:"), 0, 7);
-            grid.add(placeField, 1, 7);
-            grid.add(new Label("Width:"), 0, 8);
-            grid.add(widthField, 1, 8);
-            grid.add(new Label("Length:"), 0, 9);
-            grid.add(lengthField, 1, 9);
-            grid.add(new Label("Height:"), 0, 10);
-            grid.add(heightField, 1, 10);
-            grid.add(new Label("Weight:"), 0, 11);
-            grid.add(weightField, 1, 11);
+            grid.add(imageView, 0, 0, 2, 1);
+            grid.add(new Label("ID:"), 0, 1);
+            grid.add(idField, 1, 1);
+            grid.add(new Label("Name:"), 0, 2);
+            grid.add(nameField, 1, 2);
+            grid.add(new Label("Category:"), 0, 3);
+            grid.add(categoryField, 1, 3);
+            grid.add(new Label("Civilization:"), 0, 4);
+            grid.add(civilizationField, 1, 4);
+            grid.add(new Label("Location:"), 0, 5);
+            grid.add(locationField, 1, 5);
+            grid.add(new Label("Composition:"), 0, 6);
+            grid.add(compositionField, 1, 6);
+            grid.add(new Label("Discovery Date:"), 0, 7);
+            grid.add(dateField, 1, 7);
+            grid.add(new Label("Current Place:"), 0, 8);
+            grid.add(placeField, 1, 8);
+            grid.add(new Label("Width:"), 0, 9);
+            grid.add(widthField, 1, 9);
+            grid.add(new Label("Length:"), 0, 10);
+            grid.add(lengthField, 1, 10);
+            grid.add(new Label("Height:"), 0, 11);
+            grid.add(heightField, 1, 11);
+            grid.add(new Label("Weight:"), 0, 12);
+            grid.add(weightField, 1, 12);
+            grid.add(new Label("Image Path:"), 0, 13);
+            grid.add(imagePathField, 1, 13);
 
             GridPane tagGrid = new GridPane();
             tagGrid.setPadding(new Insets(10));
@@ -432,8 +452,8 @@ public class GUI_Manager extends Application {
             for (int i = 0; i < tags.length; i++) {
                 tagGrid.add(tagCheckBoxes[i], i % 3, i / 3);
             }
-            grid.add(new Label("Tags:"), 0, 12);
-            grid.add(tagGrid, 1, 12);
+            grid.add(new Label("Tags:"), 0, 14);
+            grid.add(tagGrid, 1, 14);
 
             Button editButton = new Button("Edit");
             editButton.setOnAction(e -> {
@@ -448,37 +468,10 @@ public class GUI_Manager extends Application {
                 editButton.setText("Save");
                 editButton.setOnAction(saveEvent -> {
                     saveArtifact(fields, tagCheckBoxes, dialog, true);
-                    /*
-                    selectedArtifact.setArtifactId(idField.getText());
-                    selectedArtifact.setArtifactName(nameField.getText());
-                    selectedArtifact.setCategory(categoryField.getText());
-                    selectedArtifact.setCivilization(civilizationField.getText());
-                    selectedArtifact.setDiscoveryLocation(locationField.getText());
-                    selectedArtifact.setComposition(compositionField.getText());
-                    selectedArtifact.setDiscoveryDate(dateField.getText());
-                    selectedArtifact.setCurrentPlace(placeField.getText());
-                    Dimensions dimensions = new Dimensions();
-                    dimensions.setWidth(Double.parseDouble(widthField.getText()));
-                    dimensions.setLength(Double.parseDouble(lengthField.getText()));
-                    dimensions.setHeight(Double.parseDouble(heightField.getText()));
-                    selectedArtifact.setDimensions(dimensions);
-                    selectedArtifact.setWeight(Double.parseDouble(weightField.getText()));
-
-                    List<String> selectedTags = new ArrayList<>();
-                    for (CheckBox checkBox : tagCheckBoxes) {
-                        if (checkBox.isSelected()) {
-                            selectedTags.add(checkBox.getText());
-                        }
-                    }
-                    selectedArtifact.setTags(selectedTags);
-
-                    catalog.editArtifact(artifactId, selectedArtifact);
-                    dialog.close();
-                 */
                 });
             });
 
-            grid.add(editButton, 1, 13);
+            grid.add(editButton, 1, 15);
 
             Scene scene = new Scene(grid, 400, 600);
             dialog.setScene(scene);
@@ -488,10 +481,10 @@ public class GUI_Manager extends Application {
 
     private void saveArtifact(TextField[] fields, CheckBox[] tagCheckBoxes, Stage dialog, boolean mode) {
         boolean isValid = true;
-        for (TextField field : fields) {
-            field.setStyle("");  //her save a basıldığında kırmızı çerçeveyi kaldırıyor , eğer düzelltiyse kırmızı çerçeve gözükmesin diye
-            if (field.getText().isEmpty()) {
-                field.setStyle("-fx-border-color: red;"); //boş ise kutu kırmızı çerçeveli olacak
+        for (int i = 0; i < fields.length; i++) {
+            fields[i].setStyle("");  //her save a basıldığında kırmızı çerçeveyi kaldırıyor , eğer düzelltiyse kırmızı çerçeve gözükmesin diye
+            if (i != 12 && fields[i].getText().isEmpty()) {
+                fields[i].setStyle("-fx-border-color: red;"); //boş ise kutu kırmızı çerçeveli olacak
                 isValid = false;
             }
         }
@@ -505,6 +498,7 @@ public class GUI_Manager extends Application {
             try {
                 Float.parseFloat(fields[index].getText());
             } catch (NumberFormatException e) {
+
                 fields[index].setStyle("-fx-border-color: red;");
                 isValid = false;
             }
@@ -525,6 +519,7 @@ public class GUI_Manager extends Application {
             dimensions.setHeight(Double.parseDouble(fields[10].getText()));
             artifact.setDimensions(dimensions);
             artifact.setWeight(Double.parseDouble(fields[11].getText()));
+            artifact.setImagePath(fields[12].getText());
 
             List<String> selectedTags = new ArrayList<>();
             for (CheckBox checkBox : tagCheckBoxes) {
@@ -539,6 +534,16 @@ public class GUI_Manager extends Application {
                 catalog.addArtifact(artifact);
             }
             dialog.close();
+        }
+    }
+
+    private void selectImage(Stage dialog, TextField imagePathField) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Image");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+        File selectedFile = fileChooser.showOpenDialog(dialog);
+        if (selectedFile != null) {
+            imagePathField.setText(selectedFile.getAbsolutePath());
         }
     }
 
