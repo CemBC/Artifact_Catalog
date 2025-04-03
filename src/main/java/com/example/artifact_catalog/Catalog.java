@@ -55,6 +55,7 @@ public class Catalog {
         artifacts.get(pointer).setDimensions(updatedArtifact.getDimensions());
         artifacts.get(pointer).setWeight(updatedArtifact.getWeight());
         artifacts.get(pointer).setTags(updatedArtifact.getTags());
+        artifacts.get(pointer).setImagePath(updatedArtifact.getImagePath());
 
 
         try {

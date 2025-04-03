@@ -443,6 +443,11 @@ public class GUI_Manager extends Application {
             TextField heightField = new TextField(String.valueOf(selectedArtifact.getDimensions().getHeight()));
             TextField weightField = new TextField(String.valueOf(selectedArtifact.getWeight()));
             TextField imagePathField = new TextField(selectedArtifact.getImagePath());
+            Button selectImageButton = new Button("Select Image");
+
+            selectImageButton.setOnAction(e -> {
+                selectImage(dialog, imagePathField);
+            });
 
             ImageView imageView = new ImageView();
             if (!selectedArtifact.getImagePath().isEmpty()) {
@@ -456,6 +461,8 @@ public class GUI_Manager extends Application {
             for (TextField field : fields) {
                 field.setEditable(false);
             }
+            selectImageButton.setDisable(true);
+            imagePathField.setEditable(false);
 
             CheckBox[] tagCheckBoxes = new CheckBox[tags.length];
             for (int i = 0; i < tags.length; i++) {
@@ -493,6 +500,7 @@ public class GUI_Manager extends Application {
             grid.add(weightField, 1, 12);
             grid.add(new Label("Image Path:"), 0, 13);
             grid.add(imagePathField, 1, 13);
+            grid.add(selectImageButton, 2, 13);
 
             GridPane tagGrid = new GridPane();
             tagGrid.setPadding(new Insets(10));
@@ -507,10 +515,11 @@ public class GUI_Manager extends Application {
             Button editButton = new Button("Edit");
             editButton.setOnAction(e -> {
                 for (TextField field : fields) {
-                    if (field != idField) {
+                    if (field != idField && field != imagePathField) {
                         field.setEditable(true);
                     }
                 }
+                selectImageButton.setDisable(false);
                 for (CheckBox checkBox : tagCheckBoxes) {
                     checkBox.setDisable(false);
                 }
