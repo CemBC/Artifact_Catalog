@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -43,15 +44,26 @@ public class GUI_Manager extends Application {
         vbox.setPadding(new Insets(20));
         vbox.setAlignment(Pos.CENTER);
 
-        Label titleLabel = new Label("ARTIFACT CATALOG RROJECT");
-        titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-font-family: 'Times New Roman';");
+        Label titleLabel = new Label("ARTIFACT CATALOG PROJECT");
+        titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-font-family: 'Times New Roman'; -fx-text-fill: #2c3e50;");
+        titleLabel.setPadding(new Insets(10));
+
+        BorderPane titlePane = new BorderPane(titleLabel);
+        titlePane.setStyle("-fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-radius: 5px;");
+        titlePane.setPadding(new Insets(10));
 
         Label welcomeLabel = new Label("WELCOME");
-        welcomeLabel.setStyle("-fx-font-size: 18px; -fx-font-family: 'Times New Roman';");
+        welcomeLabel.setStyle("-fx-font-size: 20px; -fx-font-family: 'Vladimir Script'; -fx-text-fill: #066fa0; -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);");
 
         Label authorsLabel = new Label("PREPARED BY:\nOrkun Efe Özdemir\nCem Başar Ceylani\nBetül Özsan\nAleyna Kök");
-        authorsLabel.setStyle("-fx-font-size: 14px; -fx-font-family: 'Times New Roman';");
+        authorsLabel.setStyle("-fx-font-size: 14px; -fx-font-family: 'Times New Roman'; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
         authorsLabel.setTextAlignment(TextAlignment.CENTER);
+        authorsLabel.setPadding(new Insets(10));
+
+        BorderPane authorsPane = new BorderPane(authorsLabel);
+        authorsPane.setStyle("-fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-background-radius: 5px;");
+        authorsPane.setPadding(new Insets(10));
+        authorsPane.setMaxWidth(250);
 
         Button continueButton = new Button("CONTINUE");
         continueButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px 20px; -fx-font-family: 'Times New Roman';");
@@ -60,7 +72,7 @@ public class GUI_Manager extends Application {
             showMainScreen(primaryStage);
         });
 
-        vbox.getChildren().addAll(titleLabel, welcomeLabel, authorsLabel, continueButton);
+        vbox.getChildren().addAll(titlePane, welcomeLabel, authorsPane, continueButton);
 
         Scene scene = new Scene(vbox, 400, 400);
         welcomeStage.setScene(scene);
