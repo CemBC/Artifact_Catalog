@@ -193,9 +193,11 @@ public class GUI_Manager extends Application {
         });
 
         HBox buttonBox = new HBox(10); // 10 piksel boşluk ile
+        HBox topButtonBox=new HBox(10);
         buttonBox.getChildren().addAll(addButton, removeButton);
+        topButtonBox.getChildren().addAll(loadButton,importButton,exportButton);
 
-        vbox.getChildren().addAll(loadButton, importButton,exportButton, searchField, tagBox, scrollPane, buttonBox);
+        vbox.getChildren().addAll(topButtonBox, searchField, tagBox, scrollPane, buttonBox);
 
         Scene scene = new Scene(vbox, 600, 400);
         primaryStage.setScene(scene);
@@ -345,6 +347,15 @@ public class GUI_Manager extends Application {
             }
             imageView.setFitWidth(200);
             imageView.setPreserveRatio(true);
+
+            imageView.setStyle(
+                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 20, 0.2, 0, 4);" +
+                            "-fx-background-color: linear-gradient(to bottom, #ffffff, #f4f4f4);" +
+                            "-fx-background-radius: 30px;" +
+                            "-fx-border-radius: 30px;" +
+                            "-fx-border-color: #dcdde1;" +
+                            "-fx-border-width: 1.5px;"
+            );
 
             TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, dateField, placeField, widthField, lengthField, heightField, weightField, imagePathField};
 
