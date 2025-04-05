@@ -335,27 +335,18 @@ public class GUI_Manager extends Application {
             TextField heightField = new TextField(String.valueOf(selectedArtifact.getDimensions().getHeight()));
             TextField weightField = new TextField(String.valueOf(selectedArtifact.getWeight()));
             TextField imagePathField = new TextField(selectedArtifact.getImagePath());
+
             Button selectImageButton = new Button("Select Image");
 
             selectImageButton.setOnAction(e -> {
                 selectImage(dialog, imagePathField);
             });
 
-            ImageView imageView = new ImageView();
-            if (!selectedArtifact.getImagePath().isEmpty()) {
-                imageView.setImage(new Image("file:" + selectedArtifact.getImagePath()));
-            }
-            imageView.setFitWidth(200);
-            imageView.setPreserveRatio(true);
-
-            imageView.setStyle(
-                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 20, 0.2, 0, 4);" +
-                            "-fx-background-color: linear-gradient(to bottom, #ffffff, #f4f4f4);" +
-                            "-fx-background-radius: 30px;" +
-                            "-fx-border-radius: 30px;" +
-                            "-fx-border-color: #dcdde1;" +
-                            "-fx-border-width: 1.5px;"
-            );
+            Button showImageButton = new Button("Image"); //Image butonu eklendi
+            showImageButton.setOnAction(e -> {
+                showImage(selectedArtifact.getImagePath());
+            });
+            showImageButton.setDisable(selectedArtifact.getImagePath().isEmpty());
 
             TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, dateField, placeField, widthField, lengthField, heightField, weightField, imagePathField};
 
@@ -374,7 +365,7 @@ public class GUI_Manager extends Application {
                 }
             }
 
-            grid.add(imageView, 0, 0, 2, 1);
+            grid.add(showImageButton, 0, 0, 2, 1);
             grid.add(new Label("ID:"), 0, 1);
             grid.add(idField, 1, 1);
             grid.add(new Label("Name:"), 0, 2);
@@ -442,6 +433,28 @@ public class GUI_Manager extends Application {
             dialog.setScene(scene);
             dialog.show();
         }
+    }
+
+    private void showImage(String imagePath) { //Image butonuna basınca açılan pencere
+        Stage imageStage = new Stage();
+        imageStage.setTitle("Image Viewer");
+
+        ImageView imageView = new ImageView();
+        Image image = new Image("file:" + imagePath);
+        imageView.setImage(image);
+
+        double imageWidth = image.getWidth();    //Pixel boyutunu alıyoruz
+        double imageHeight = image.getHeight();
+
+        imageView.setFitWidth(imageWidth);   //Ekranın pixel boyutunu image in pixel boyutuna eşitliyoruz
+        imageView.setFitHeight(imageHeight);
+        imageView.setPreserveRatio(true);
+
+        StackPane imageViewer = new StackPane(imageView);
+        Scene scene = new Scene(imageViewer, imageWidth, imageHeight);
+        imageStage.setResizable(false);
+        imageStage.setScene(scene);
+        imageStage.show();
     }
 
     private void saveArtifact(TextField[] fields, CheckBox[] tagCheckBoxes, Stage dialog, boolean mode) {
