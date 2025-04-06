@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -450,9 +451,23 @@ public class GUI_Manager extends Application {
         imageView.setFitHeight(imageHeight);
         imageView.setPreserveRatio(true);
 
-        StackPane imageViewer = new StackPane(imageView);
-        Scene scene = new Scene(imageViewer, imageWidth, imageHeight);
-        imageStage.setResizable(false);
+
+
+        imageView.setOnScroll(event -> {
+            double delta = event.getDeltaY();  //Fare tekerliğinin hangi yönde ne kadar döndüğü
+            double scale = imageView.getScaleX() + delta / 300;  //Scroll hızını ayarlıyoruz
+            scale = Math.max(0.1, Math.min(scale, 10));  //ölçeklendirme sınırları maximum nereye kadar zoom in zoom out yapabileceğimiz yani
+            imageView.setScaleX(scale);
+            imageView.setScaleY(scale);
+        });
+        imageView.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.MIDDLE) {
+                imageView.setScaleX(1);
+                imageView.setScaleY(1);
+            }
+        });
+
+        Scene scene = new Scene(new StackPane(imageView), imageWidth, imageHeight);
         imageStage.setScene(scene);
         imageStage.show();
     }
