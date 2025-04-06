@@ -521,7 +521,18 @@ public class GUI_Manager extends Application {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
         File selectedFile = fileChooser.showOpenDialog(dialog);
         if (selectedFile != null) {
-            imagePathField.setText(selectedFile.getAbsolutePath());
+            Image image = new Image("file:" + selectedFile.getAbsolutePath());
+            double maxWidth = 1280; // Yeni maksimum genişlik
+            double maxHeight = 720;// Maksimum yükseklik
+            if (image.getWidth() > maxWidth || image.getHeight() > maxHeight) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Image Size Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Selected image is too large. Please select an image smaller than " + (int)maxWidth + "x" + (int)maxHeight + " pixels.");
+                alert.showAndWait();
+            } else {
+                imagePathField.setText(selectedFile.getAbsolutePath());
+            }
         }
     }
 
