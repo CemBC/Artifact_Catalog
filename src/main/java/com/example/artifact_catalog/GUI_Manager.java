@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -124,19 +125,32 @@ public class GUI_Manager extends Application {
         });
 
         Button loadButton = new Button("Load Artifacts");
-        ListView<String> listView = new ListView<>();
 
-        ScrollPane scrollPane = new ScrollPane(listView);
+        TableView<Artifact> tableView = new TableView<>();
+
+        TableColumn<Artifact, String> idColumn = new TableColumn<>("ID");
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("artifactId"));
+
+        TableColumn<Artifact, String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("artifactName"));
+
+        TableColumn<Artifact, String> dateColumn = new TableColumn<>("Date");
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("discoveryDate"));
+
+        tableView.getColumns().addAll(idColumn, nameColumn, dateColumn);
+
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        ScrollPane scrollPane = new ScrollPane(tableView);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefViewportHeight(200); // ScrollPane'in yüksekliğini ayarlıyoruz
 
-        // ListView'a selection listener ekliyoruz
-        listView.setOnMouseClicked(event -> {
+        // tableView'a selection listener ekliyoruz
+        tableView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {  //Çift tıklama ile edit butonunu etkinleştirme eklendi
-                String selectedItem = listView.getSelectionModel().getSelectedItem();
-                if (selectedItem != null) {
-                    String artifactId = selectedItem.substring(selectedItem.indexOf('(') + 1, selectedItem.indexOf(')'));
-                    showArtifactDetails(artifactId);
+                Artifact selectedArtifact = tableView.getSelectionModel().getSelectedItem();
+                if (selectedArtifact != null) {
+                    showArtifactDetails(selectedArtifact.getArtifactId());
                 }
             }
         });
@@ -145,21 +159,19 @@ public class GUI_Manager extends Application {
         searchField.setPromptText("Enter search terms (comma-separated)");
 
 
-        loadButton.setOnAction(e -> {//load tuşuna basınca jsondaki verileri listview içine atıyor
-            String data = searchField.getText(); //datayı String olarak alıyor
-            List<String> selectedTags = new ArrayList<>(); //seçilen tagları alıyor
+        loadButton.setOnAction(e -> {
+            String data = searchField.getText();
+            List<String> selectedTags = new ArrayList<>();
             for (CheckBox checkBox : tagCheckBoxes) {
                 if (checkBox.isSelected()) {
                     selectedTags.add(checkBox.getText());
                 }
             }
             try {
-                catalog.loadArtifactsFromFile();  //burdaki methodda okuyor verileri
-                List<Artifact> artifacts = catalog.getFilteredArtifacts(data, selectedTags); //Search Butonu yerine load butonuna search mantığı uygulandı
-                listView.getItems().clear();
-                for (Artifact artifact : artifacts) {
-                    listView.getItems().add(artifact.getArtifactName() + " (" + artifact.getArtifactId() + ")");
-                }
+                catalog.loadArtifactsFromFile();
+                List<Artifact> artifacts = catalog.getFilteredArtifacts(data, selectedTags);
+                tableView.getItems().clear();
+                tableView.getItems().addAll(artifacts);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -175,21 +187,21 @@ public class GUI_Manager extends Application {
 
 
         Button addButton = new Button("Add Artifact");
-        addButton.setOnAction(e -> showAddArtifactDialog());  //add penceresi açıyor
+        addButton.setOnAction(e -> showAddArtifactDialog());
 
         Button removeButton = new Button("Remove Artifact");
-        removeButton.setDisable(true); // Butonu devre dışı bırakıyoruz
-
-        listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        removeButton.setDisable(true);
+        tableView.getSelectionModel().selectedItemProperty().addListener((observable ,
+                                                                          oldValue,
+                                                                          newValue) -> {
             removeButton.setDisable(newValue == null);
         });
 
         removeButton.setOnAction(e -> {
-            String selectedItem = listView.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                String artifactId = selectedItem.substring(selectedItem.indexOf('(') + 1, selectedItem.indexOf(')'));
-                catalog.removeArtifact(artifactId);
-                listView.getItems().remove(selectedItem);
+            Artifact selectedArtifact = tableView.getSelectionModel().getSelectedItem();
+            if (selectedArtifact != null) {
+                catalog.removeArtifact(selectedArtifact.getArtifactId());
+                tableView.getItems().remove(selectedArtifact);
             }
         });
 
