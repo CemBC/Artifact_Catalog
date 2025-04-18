@@ -12,7 +12,7 @@ import java.util.List;
 
 public class File_Manager {
 
-    //private static final String FILE_PATH = System.getProperty("user.home") + "/Documents/artifacts.json";
+    private final List<String> validTags = List.of("tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9");
 
     public List<Artifact> readArtifactsFromFile(String filePath) throws IOException {
         Path path = Paths.get(filePath);
@@ -50,7 +50,10 @@ public class File_Manager {
 
                 List<String> tags = new ArrayList<>();
                 for (int j = 0; j < tagsArray.length(); j++) {
-                    tags.add(tagsArray.getString(j));
+                    String tag = tagsArray.getString(j);
+                    if (validTags.contains(tag)) {
+                        tags.add(tag);
+                    }
                 }
                 artifact.setTags(tags);
                 artifacts.add(artifact);

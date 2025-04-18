@@ -30,7 +30,6 @@ public class GUI_Manager extends Application {
     private CheckBox[] tagCheckBoxes = new CheckBox[tags.length];
     private final String  path = System.getProperty("user.home") + "/Documents/artifacts.json";
     private final String downloadsPath = System.getProperty("user.home") + "/Downloads/exported_artifacts.json";
-    //private SearchManager searchManager = new SearchManager();
 
     @Override
     public void start(Stage primaryStage) {
@@ -100,20 +99,31 @@ public class GUI_Manager extends Application {
         root.setTop(menuBar);
 
         importButton.setOnAction(e -> {
-            FileChooser fileChooser = new FileChooser();  //File Chooser ile yeni aktarılacak dosya seçiliyor
-            fileChooser.setTitle("Select JSON File");
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
-            File selectedFile = fileChooser.showOpenDialog(primaryStage);
-            if (selectedFile != null) {
-                try {
-                    List<Artifact> ImportedData = fileManager.readArtifactsFromFile(selectedFile.getAbsolutePath()); //Pathı al ve Pathteki dosya içeriğini listeye aktar
-                    fileManager.writeAllArtifactsToFile(path, ImportedData); //Listeyi belgelerde zaten hazır açılı olan json dosyasına aktar
-                    Files.delete(selectedFile.toPath());  //Seçilen dosyayı sil
-                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Import Warning");
+            alert.setHeaderText(null);
+            alert.setContentText("Invalid tags that are in the imported json file will be deleted.");
+            ButtonType agreeButton = new ButtonType("I Agree", ButtonBar.ButtonData.OK_DONE);
+            alert.getButtonTypes().setAll(agreeButton);
+
+            alert.showAndWait().ifPresent(response -> {
+                if (response == agreeButton) {
+                    FileChooser fileChooser = new FileChooser();  // File Chooser ile yeni aktarılacak dosya seçiliyor
+                    fileChooser.setTitle("Select JSON File");
+                    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+                    File selectedFile = fileChooser.showOpenDialog(primaryStage);
+                    if (selectedFile != null) {
+                        try {
+                            List<Artifact> ImportedData = fileManager.readArtifactsFromFile(selectedFile.getAbsolutePath()); // Path'i al ve Path'teki dosya içeriğini listeye aktar
+                            fileManager.writeAllArtifactsToFile(path, ImportedData); // Listeyi belgelerde zaten hazır açılı olan json dosyasına aktar
+                            Files.delete(selectedFile.toPath());  // Seçilen dosyayı sil
+                            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
                 }
-            }
+            });
         });
 
 
