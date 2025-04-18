@@ -86,11 +86,18 @@ public class GUI_Manager extends Application {
         primaryStage.setResizable(false);
         primaryStage.setTitle("Artifact Manager");
 
+        BorderPane root = new BorderPane();
+
         VBox vbox = new VBox();
         vbox.setPadding(new Insets(10));
         vbox.setSpacing(10);
+        root.setCenter(vbox);
 
-        Button importButton = new Button("Import data"); //Import Button yerini değiştirebilirsiniz
+        MenuBar menuBar = new MenuBar();
+        Menu fileMenu = new Menu("File");
+        MenuItem importButton = new MenuItem("Import Data");
+        MenuItem exportButton= new MenuItem("Export Data");
+        root.setTop(menuBar);
 
         importButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();  //File Chooser ile yeni aktarılacak dosya seçiliyor
@@ -109,7 +116,7 @@ public class GUI_Manager extends Application {
             }
         });
 
-        Button exportButton = new Button("Export data");
+
 
         exportButton.setOnAction(e -> {
             try {
@@ -210,11 +217,12 @@ public class GUI_Manager extends Application {
         HBox buttonBox = new HBox(10); // 10 piksel boşluk ile
         HBox topButtonBox=new HBox(10);
         buttonBox.getChildren().addAll(addButton, removeButton);
-        topButtonBox.getChildren().addAll(loadButton,importButton,exportButton);
-
+        topButtonBox.getChildren().addAll(loadButton);
+        fileMenu.getItems().addAll(importButton, exportButton);
+        menuBar.getMenus().add(fileMenu);
         vbox.getChildren().addAll(topButtonBox, searchField, tagBox, scrollPane, buttonBox);
 
-        Scene scene = new Scene(vbox, 600, 400);
+        Scene scene = new Scene(root, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
