@@ -18,6 +18,8 @@ import javafx.scene.text.TextAlignment;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -233,7 +235,8 @@ public class GUI_Manager extends Application {
         TextField civilizationField = new TextField();
         TextField locationField = new TextField();
         TextField compositionField = new TextField();
-        TextField dateField = new TextField();
+        DatePicker datePicker = new DatePicker();
+        datePicker.setEditable(false);
         TextField placeField = new TextField();
         TextField widthField = new TextField();
         TextField lengthField = new TextField();
@@ -246,7 +249,7 @@ public class GUI_Manager extends Application {
             selectImage(dialog, imagePathField);
         });
 
-        TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, dateField, placeField, widthField, lengthField, heightField, weightField, imagePathField};
+        TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, placeField, widthField, lengthField, heightField, weightField, imagePathField};
 
         for (int i = 0; i < fields.length; i++) {
             final int index = i;
@@ -282,7 +285,7 @@ public class GUI_Manager extends Application {
         grid.add(new Label("Composition:"), 0, 5);
         grid.add(compositionField, 1, 5);
         grid.add(new Label("Discovery Date:"), 0, 6);
-        grid.add(dateField, 1, 6);
+        grid.add(datePicker, 1, 6);
         grid.add(new Label("Current Place:"), 0, 7);
         grid.add(placeField, 1, 7);
         grid.add(new Label("Width:"), 0, 8);
@@ -310,7 +313,7 @@ public class GUI_Manager extends Application {
         grid.add(tagGrid, 1, 13);
 
         Button saveButton = new Button("Save");
-        saveButton.setOnAction(e -> saveArtifact(fields, tagCheckBoxes, dialog, false));
+        saveButton.setOnAction(e -> saveArtifact(fields, tagCheckBoxes, dialog,datePicker, false));
 
         grid.add(saveButton, 1, 14);
 
@@ -341,7 +344,8 @@ public class GUI_Manager extends Application {
             TextField civilizationField = new TextField(selectedArtifact.getCivilization());
             TextField locationField = new TextField(selectedArtifact.getDiscoveryLocation());
             TextField compositionField = new TextField(selectedArtifact.getComposition());
-            TextField dateField = new TextField(selectedArtifact.getDiscoveryDate());
+            DatePicker datePicker = new DatePicker();
+            datePicker.setValue(LocalDate.parse(selectedArtifact.getDiscoveryDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
             TextField placeField = new TextField(selectedArtifact.getCurrentPlace());
             TextField widthField = new TextField(String.valueOf(selectedArtifact.getDimensions().getWidth()));
             TextField lengthField = new TextField(String.valueOf(selectedArtifact.getDimensions().getLength()));
@@ -361,11 +365,13 @@ public class GUI_Manager extends Application {
             });
             showImageButton.setDisable(selectedArtifact.getImagePath().isEmpty());
 
-            TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, dateField, placeField, widthField, lengthField, heightField, weightField, imagePathField};
+            TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, placeField, widthField, lengthField, heightField, weightField, imagePathField};
 
             for (TextField field : fields) {
                 field.setEditable(false);
             }
+            datePicker.setDisable(true);
+            datePicker.setEditable(false);
             selectImageButton.setDisable(true);
             imagePathField.setEditable(false);
 
@@ -392,7 +398,7 @@ public class GUI_Manager extends Application {
             grid.add(new Label("Composition:"), 0, 6);
             grid.add(compositionField, 1, 6);
             grid.add(new Label("Discovery Date:"), 0, 7);
-            grid.add(dateField, 1, 7);
+            grid.add(datePicker, 1, 7);
             grid.add(new Label("Current Place:"), 0, 8);
             grid.add(placeField, 1, 8);
             grid.add(new Label("Width:"), 0, 9);
@@ -428,9 +434,10 @@ public class GUI_Manager extends Application {
                 for (CheckBox checkBox : tagCheckBoxes) {
                     checkBox.setDisable(false);
                 }
+                datePicker.setDisable(false);
                 editButton.setText("Save");
                 editButton.setOnAction(saveEvent -> {
-                    saveArtifact(fields, tagCheckBoxes, dialog, true);
+                    saveArtifact(fields, tagCheckBoxes, dialog, datePicker , true);
                 });
             });
 
@@ -484,21 +491,23 @@ public class GUI_Manager extends Application {
         imageStage.show();
     }
 
-    private void saveArtifact(TextField[] fields, CheckBox[] tagCheckBoxes, Stage dialog, boolean mode) {
+    private void saveArtifact(TextField[] fields, CheckBox[] tagCheckBoxes, Stage dialog,DatePicker datePicker ,  boolean mode) {
         boolean isValid = true;
         for (int i = 0; i < fields.length; i++) {
             fields[i].setStyle("");  //her save a basıldığında kırmızı çerçeveyi kaldırıyor , eğer düzelltiyse kırmızı çerçeve gözükmesin diye
-            if (i != 12 && fields[i].getText().isEmpty()) {
+            if (i != 11 && fields[i].getText().isEmpty()) {
                 fields[i].setStyle("-fx-border-color: red;"); //boş ise kutu kırmızı çerçeveli olacak
                 isValid = false;
             }
         }
-        String datePattern = "^(0[1-9]|[12][0-9]|3[01]).(0[1-9]|1[0-2]).\\d{4}$";  //date için regex 01.01.2001
-        if (!fields[6].getText().matches(datePattern)) {
-            fields[6].setStyle("-fx-border-color: red;");
+        //String datePattern = "^(0[1-9]|[12][0-9]|3[01]).(0[1-9]|1[0-2]).\\d{4}$";  //date için regex 01.01.2001
+        if (datePicker.getValue() == null ) {//|| !datePicker.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")).matches(datePattern)) {
+            datePicker.setStyle("-fx-border-color: red;");
             isValid = false;
+        } else {
+            datePicker.setStyle("");
         }
-        int[] floatFieldIndices = {8, 9, 10, 11};  //width,length,height,weight ' in float değer olup olmadığını kontrol ediyor
+        int[] floatFieldIndices = {7, 8, 9, 10};  //width,length,height,weight ' in float değer olup olmadığını kontrol ediyor
         for (int index : floatFieldIndices) {
             try {
                 Float.parseFloat(fields[index].getText());
@@ -516,15 +525,15 @@ public class GUI_Manager extends Application {
             artifact.setCivilization(fields[3].getText());
             artifact.setDiscoveryLocation(fields[4].getText());
             artifact.setComposition(fields[5].getText());
-            artifact.setDiscoveryDate(fields[6].getText());
-            artifact.setCurrentPlace(fields[7].getText());
+            artifact.setDiscoveryDate(datePicker.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+            artifact.setCurrentPlace(fields[6].getText());
             Dimensions dimensions = new Dimensions();
-            dimensions.setWidth(Double.parseDouble(fields[8].getText()));
-            dimensions.setLength(Double.parseDouble(fields[9].getText()));
-            dimensions.setHeight(Double.parseDouble(fields[10].getText()));
+            dimensions.setWidth(Double.parseDouble(fields[7].getText()));
+            dimensions.setLength(Double.parseDouble(fields[8].getText()));
+            dimensions.setHeight(Double.parseDouble(fields[9].getText()));
             artifact.setDimensions(dimensions);
-            artifact.setWeight(Double.parseDouble(fields[11].getText()));
-            artifact.setImagePath(fields[12].getText());
+            artifact.setWeight(Double.parseDouble(fields[10].getText()));
+            artifact.setImagePath(fields[11].getText());
 
             List<String> selectedTags = new ArrayList<>();
             for (CheckBox checkBox : tagCheckBoxes) {
