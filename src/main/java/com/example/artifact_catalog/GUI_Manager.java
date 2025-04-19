@@ -15,8 +15,10 @@ import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.scene.text.TextAlignment;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -97,6 +99,46 @@ public class GUI_Manager extends Application {
         MenuItem importButton = new MenuItem("Import Data");
         MenuItem exportButton= new MenuItem("Export Data");
         root.setTop(menuBar);
+
+
+        Menu helpMenu = new Menu("Help");
+        MenuItem helpItem = new MenuItem("Show Help");
+        helpMenu.getItems().add(helpItem);
+        menuBar.getMenus().add(helpMenu);
+
+
+
+        helpItem.setOnAction(e -> {
+            try (BufferedReader rd = new BufferedReader(
+                    new InputStreamReader(getClass().getClassLoader().getResourceAsStream("orkun.txt")))) {
+                StringBuilder content = new StringBuilder();
+                String line;
+                while ((line = rd.readLine()) != null) {
+                    content.append(line).append(System.lineSeparator());
+                }
+                Stage stage2 = new Stage();
+                stage2.setTitle("Help");
+
+                TextArea textArea = new TextArea(content.toString());
+                textArea.setEditable(false);
+                textArea.setWrapText(true);
+                ScrollPane scrollPane = new ScrollPane(textArea);
+                scrollPane.setFitToWidth(true);
+                scrollPane.setFitToHeight(true);
+
+                BorderPane root2 = new BorderPane(scrollPane);
+                Scene scene2 = new Scene(root2, 600, 400);
+                stage2.setResizable(false);
+                stage2.setScene(scene2);
+                stage2.show();
+            } catch (IOException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Could not load help file");
+                alert.setContentText(ex.getMessage());
+                alert.showAndWait();
+            }
+        });
 
         importButton.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.WARNING);
