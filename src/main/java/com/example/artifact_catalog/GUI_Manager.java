@@ -318,6 +318,7 @@ public class GUI_Manager extends Application {
         TextField civilizationField = new TextField();
         TextField locationField = new TextField();
         TextField compositionField = new TextField();
+        TextField dateField = new TextField();
         DatePicker datePicker = new DatePicker();
         datePicker.setEditable(false);
         TextField placeField = new TextField();
@@ -332,7 +333,16 @@ public class GUI_Manager extends Application {
             selectImage(dialog, imagePathField);
         });
 
-        TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, placeField, widthField, lengthField, heightField, weightField, imagePathField};
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                dateField.setText(newValue.format(formatter));
+            }
+        });
+        datePicker.getEditor().setDisable(true);
+        datePicker.getEditor().setOpacity(0);
+
+        TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, placeField, widthField, lengthField, heightField, weightField, imagePathField , dateField};
 
         for (int i = 0; i < fields.length; i++) {
             final int index = i;
@@ -367,21 +377,22 @@ public class GUI_Manager extends Application {
         grid.add(locationField, 1, 4);
         grid.add(new Label("Composition:"), 0, 5);
         grid.add(compositionField, 1, 5);
-        grid.add(new Label("Discovery Date:"), 0, 6);
-        grid.add(datePicker, 1, 6);
-        grid.add(new Label("Current Place:"), 0, 7);
-        grid.add(placeField, 1, 7);
-        grid.add(new Label("Width:"), 0, 8);
-        grid.add(widthField, 1, 8);
-        grid.add(new Label("Length:"), 0, 9);
-        grid.add(lengthField, 1, 9);
-        grid.add(new Label("Height:"), 0, 10);
-        grid.add(heightField, 1, 10);
-        grid.add(new Label("Weight:"), 0, 11);
-        grid.add(weightField, 1, 11);
-        grid.add(new Label("Image Path:"), 0, 12);
-        grid.add(imagePathField, 1, 12);
-        grid.add(selectImageButton, 2, 12);
+        grid.add(datePicker , 1 , 6);
+        grid.add(new Label("Discovery Date:"), 0, 7);
+        grid.add(dateField, 1, 7);
+        grid.add(new Label("Current Place:"), 0, 8);
+        grid.add(placeField, 1, 8);
+        grid.add(new Label("Width:"), 0, 9);
+        grid.add(widthField, 1, 9);
+        grid.add(new Label("Length:"), 0, 10);
+        grid.add(lengthField, 1, 10);
+        grid.add(new Label("Height:"), 0, 11);
+        grid.add(heightField, 1, 11);
+        grid.add(new Label("Weight:"), 0, 12);
+        grid.add(weightField, 1, 12);
+        grid.add(new Label("Image Path:"), 0, 13);
+        grid.add(imagePathField, 1, 13);
+        grid.add(selectImageButton, 2, 13);
 
         GridPane tagGrid = new GridPane();
         tagGrid.setPadding(new Insets(10));
@@ -392,17 +403,15 @@ public class GUI_Manager extends Application {
             tagCheckBoxes[i] = new CheckBox(tags[i]);
             tagGrid.add(tagCheckBoxes[i], i % 3, i / 3);
         }
-        grid.add(new Label("Tags:"), 0, 13);
-        grid.add(tagGrid, 1, 13);
+        grid.add(new Label("Tags:"), 0, 14);
+        grid.add(tagGrid, 1, 14);
 
         Button saveButton = new Button("Save");
         saveButton.setOnAction(e -> saveArtifact(fields, tagCheckBoxes, dialog,datePicker, false));
 
-        grid.add(saveButton, 1, 14);
+        grid.add(saveButton, 1, 15);
 
-        ;
-
-        Scene scene = new Scene(grid, 400, 650);
+        Scene scene = new Scene(grid, 400, 700);
         dialog.setScene(scene);
         dialog.show();
     }
@@ -428,13 +437,25 @@ public class GUI_Manager extends Application {
             TextField locationField = new TextField(selectedArtifact.getDiscoveryLocation());
             TextField compositionField = new TextField(selectedArtifact.getComposition());
             DatePicker datePicker = new DatePicker();
-            datePicker.setValue(LocalDate.parse(selectedArtifact.getDiscoveryDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+            TextField dateField = new TextField(selectedArtifact.getDiscoveryDate());
+
+            //datePicker.setValue(LocalDate.parse(selectedArtifact.getDiscoveryDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
             TextField placeField = new TextField(selectedArtifact.getCurrentPlace());
             TextField widthField = new TextField(String.valueOf(selectedArtifact.getDimensions().getWidth()));
             TextField lengthField = new TextField(String.valueOf(selectedArtifact.getDimensions().getLength()));
             TextField heightField = new TextField(String.valueOf(selectedArtifact.getDimensions().getHeight()));
             TextField weightField = new TextField(String.valueOf(selectedArtifact.getWeight()));
             TextField imagePathField = new TextField(selectedArtifact.getImagePath());
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    dateField.setText(newValue.format(formatter));
+                }
+            });
+
+            datePicker.getEditor().setOpacity(0);
+
 
             Button selectImageButton = new Button("Select Image");
 
@@ -448,7 +469,7 @@ public class GUI_Manager extends Application {
             });
             showImageButton.setDisable(selectedArtifact.getImagePath().isEmpty());
 
-            TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, placeField, widthField, lengthField, heightField, weightField, imagePathField};
+            TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, placeField, widthField, lengthField, heightField, weightField, imagePathField , dateField};
 
             for (TextField field : fields) {
                 field.setEditable(false);
@@ -480,21 +501,22 @@ public class GUI_Manager extends Application {
             grid.add(locationField, 1, 5);
             grid.add(new Label("Composition:"), 0, 6);
             grid.add(compositionField, 1, 6);
-            grid.add(new Label("Discovery Date:"), 0, 7);
-            grid.add(datePicker, 1, 7);
-            grid.add(new Label("Current Place:"), 0, 8);
-            grid.add(placeField, 1, 8);
-            grid.add(new Label("Width:"), 0, 9);
-            grid.add(widthField, 1, 9);
-            grid.add(new Label("Length:"), 0, 10);
-            grid.add(lengthField, 1, 10);
-            grid.add(new Label("Height:"), 0, 11);
-            grid.add(heightField, 1, 11);
-            grid.add(new Label("Weight:"), 0, 12);
-            grid.add(weightField, 1, 12);
-            grid.add(new Label("Image Path:"), 0, 13);
-            grid.add(imagePathField, 1, 13);
-            grid.add(selectImageButton, 2, 13);
+            grid.add(datePicker , 1, 7);
+            grid.add(new Label("Discovery Date:"), 0, 8);
+            grid.add(dateField, 1, 8);
+            grid.add(new Label("Current Place:"), 0, 9);
+            grid.add(placeField, 1, 9);
+            grid.add(new Label("Width:"), 0, 10);
+            grid.add(widthField, 1, 10);
+            grid.add(new Label("Length:"), 0, 11);
+            grid.add(lengthField, 1, 11);
+            grid.add(new Label("Height:"), 0, 12);
+            grid.add(heightField, 1, 12);
+            grid.add(new Label("Weight:"), 0, 13);
+            grid.add(weightField, 1, 13);
+            grid.add(new Label("Image Path:"), 0, 14);
+            grid.add(imagePathField, 1, 14);
+            grid.add(selectImageButton, 2, 14);
 
             GridPane tagGrid = new GridPane();
             tagGrid.setPadding(new Insets(10));
@@ -503,8 +525,8 @@ public class GUI_Manager extends Application {
             for (int i = 0; i < tags.length; i++) {
                 tagGrid.add(tagCheckBoxes[i], i % 3, i / 3);
             }
-            grid.add(new Label("Tags:"), 0, 14);
-            grid.add(tagGrid, 1, 14);
+            grid.add(new Label("Tags:"), 0, 15);
+            grid.add(tagGrid, 1, 15);
 
             Button editButton = new Button("Edit");
             editButton.setOnAction(e -> {
@@ -524,7 +546,7 @@ public class GUI_Manager extends Application {
                 });
             });
 
-            grid.add(editButton, 1, 15);
+            grid.add(editButton, 1, 16);
 
             ScrollPane scrollPane = new ScrollPane(grid);
             scrollPane.setFitToWidth(true);
@@ -532,7 +554,7 @@ public class GUI_Manager extends Application {
             scrollPane.setPrefViewportWidth(400);
             scrollPane.setPrefViewportHeight(400);
 
-            Scene scene = new Scene(scrollPane, 400, 650);
+            Scene scene = new Scene(scrollPane, 400, 700);
             dialog.setScene(scene);
             dialog.show();
         }
@@ -583,12 +605,12 @@ public class GUI_Manager extends Application {
                 isValid = false;
             }
         }
-        //String datePattern = "^(0[1-9]|[12][0-9]|3[01]).(0[1-9]|1[0-2]).\\d{4}$";  //date için regex 01.01.2001
-        if (datePicker.getValue() == null ) {//|| !datePicker.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")).matches(datePattern)) {
-            datePicker.setStyle("-fx-border-color: red;");
+        String datePattern = "^(0[1-9]|[12][0-9]|3[01]).(0[1-9]|1[0-2]).\\d{4}$";  //date için regex 01.01.2001
+        if (fields[12].getText().isEmpty() || !fields[12].getText().matches(datePattern)) {//|| !datePicker.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")).matches(datePattern)) {
+            fields[12].setStyle("-fx-border-color: red;");
             isValid = false;
         } else {
-            datePicker.setStyle("");
+            fields[12].setStyle("");
         }
         int[] floatFieldIndices = {7, 8, 9, 10};  //width,length,height,weight ' in float değer olup olmadığını kontrol ediyor
         for (int index : floatFieldIndices) {
@@ -608,7 +630,7 @@ public class GUI_Manager extends Application {
             artifact.setCivilization(fields[3].getText());
             artifact.setDiscoveryLocation(fields[4].getText());
             artifact.setComposition(fields[5].getText());
-            artifact.setDiscoveryDate(datePicker.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+            artifact.setDiscoveryDate(fields[12].getText());
             artifact.setCurrentPlace(fields[6].getText());
             Dimensions dimensions = new Dimensions();
             dimensions.setWidth(Double.parseDouble(fields[7].getText()));
