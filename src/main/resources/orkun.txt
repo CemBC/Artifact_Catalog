@@ -1,60 +1,53 @@
-HELP YERİ
-dCemocemcoemamasmmdmcememcmemcmemcmemcmmemcmemcmemmcmemcmemmcmemcmmemcmmemcmmemcmmemcme  Cem
-ad
-as
-d
-as
-d
-sadas
-dasd
-a
-d
-a
-da
-d
-sd
-a
-d
-ad
-as
-das
-d
-asd
-a
-da
-d
-d
-ad
-sa
-d
-asd
-as
-das
-d
-asd
-as
-das
-das
-das
-d
+                        ----------------ARTIFACT CATALOG USER GUIDE----------------
 
-as
-d
-a
-da
-das
-das
-d
-sad
-as
-d
-sa
+1. **Welcome Screen**:
+   - When you start the application, you will see a welcome screen.
+   - Click the "CONTINUE" button to proceed to the main screen.
+   - Click the "HELP" button to view this user guide.
 
-as
-d
+2. **Main Screen**:
+   - On the main screen, you can see a list of existing artifacts.
+   - To filter artifacts:
+     - Enter keywords in the search bar. Without any input, all artifacts will be displayed.
+        You should use comma (,) to separate multiple keywords.
+     - Select relevant tags. (Optional)
+     - Click the "Load Artifacts" button.
+   - Double-click an item in the list to view its details.
 
-as
-dd
-asd
-as
-dasd
+3. **Adding an Artifact**:
+   - Click the "Add Artifact" button to add a new artifact.
+   - Fill in the required fields in the dialog:
+     - Name, Category, Civilization, Discovery Location, Composition, Date, Dimensions, Weight, Tags, and Image.
+        The selected Image should not be larger than 1280x720 pixels.
+   - Click the "Save" button to save the artifact.
+
+4. **Removing an Artifact**:
+   - Select an artifact from the list.
+   - Click the "Remove Artifact" button to delete the selected artifact.
+
+5. **Importing/Exporting Data**:
+   - From the "File" menu:
+     - Use "Import Data" to load data from a JSON file that user wish to use externally.
+        CAUTIONS: Any relevant tag will be removed.
+                The imported file will be deleted after copying the data.
+     - Use "Export Data" to save the current data into "Downloads" directory of yours.
+
+6. **Viewing Artifact Details**:
+   - Double-click an artifact in the list to view its details.
+   - In the details screen, you can view and edit the artifact's information by clicking the edit button.
+
+7. **Viewing Images**:
+   - In the details screen, click the "Image" button to view the artifact's image.
+   - Use the mouse wheel to zoom in/out.
+   - Click the middle mouse button to reset the image to its original size.
+
+8. **Warnings and Errors**:
+   - Missing or incorrect information will be highlighted with a red border.
+   - If the JSON file is invalid or corrupted, an error message will be displayed.
+
+This guide provides an overview of the application's main features. For further assistance, contact the development team.
+
+Aleyna Kök:           https://github.com/aleynakok
+Cem Başar Ceylani:    https://github.com/aleynakok
+Orkun Efe Özdemir:    https://github.com/orkrun
+Betül Özsan:             https://github.com/elmacan
