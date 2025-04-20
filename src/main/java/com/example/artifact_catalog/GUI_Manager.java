@@ -259,15 +259,12 @@ public class GUI_Manager extends Application {
             tagBox.getChildren().add(tagCheckBoxes[i]);
         }
 
-
         Button addButton = new Button("Add Artifact");
         addButton.setOnAction(e -> showAddArtifactDialog());
 
         Button removeButton = new Button("Remove Artifact");
         removeButton.setDisable(true);
-        tableView.getSelectionModel().selectedItemProperty().addListener((observable ,
-                                                                          oldValue,
-                                                                          newValue) -> {
+        tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             removeButton.setDisable(newValue == null);
         });
 
@@ -279,20 +276,21 @@ public class GUI_Manager extends Application {
             }
         });
 
-
         Button backButton = new Button("Back");
         backButton.setOnAction(e -> {
-
             primaryStage.close();
             showWelcomeScreen(primaryStage);
-
         });
 
-        HBox buttonBox = new HBox(10); // 10 piksel boşluk
-        HBox topButtonBox = new HBox(10);
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        buttonBox.getChildren().addAll(addButton, removeButton, backButton);
+        HBox buttonBox = new HBox(10);
+        buttonBox.getChildren().addAll(addButton, removeButton, spacer, backButton);
+
+        HBox topButtonBox = new HBox(10);
         topButtonBox.getChildren().addAll(loadButton);
+
         fileMenu.getItems().addAll(importButton, exportButton);
         menuBar.getMenus().add(fileMenu);
         vbox.getChildren().addAll(topButtonBox, searchField, tagBox, scrollPane, buttonBox);
@@ -300,6 +298,7 @@ public class GUI_Manager extends Application {
         Scene scene = new Scene(root, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
+
 
     }
 
