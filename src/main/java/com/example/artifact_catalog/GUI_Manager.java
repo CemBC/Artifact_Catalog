@@ -407,7 +407,7 @@ public class GUI_Manager extends Application {
         grid.add(tagGrid, 1, 14);
 
         Button saveButton = new Button("Save");
-        saveButton.setOnAction(e -> saveArtifact(fields, tagCheckBoxes, dialog,datePicker, false));
+        saveButton.setOnAction(e -> saveArtifact(fields, tagCheckBoxes, dialog, false));
 
         grid.add(saveButton, 1, 15);
 
@@ -542,7 +542,7 @@ public class GUI_Manager extends Application {
                 datePicker.setDisable(false);
                 editButton.setText("Save");
                 editButton.setOnAction(saveEvent -> {
-                    saveArtifact(fields, tagCheckBoxes, dialog, datePicker , true);
+                    saveArtifact(fields, tagCheckBoxes, dialog, true);
                 });
             });
 
@@ -596,7 +596,7 @@ public class GUI_Manager extends Application {
         imageStage.show();
     }
 
-    private void saveArtifact(TextField[] fields, CheckBox[] tagCheckBoxes, Stage dialog,DatePicker datePicker ,  boolean mode) {
+    private void saveArtifact(TextField[] fields, CheckBox[] tagCheckBoxes, Stage dialog ,  boolean mode) {
         boolean isValid = true;
         for (int i = 0; i < fields.length; i++) {
             fields[i].setStyle("");  //her save a basıldığında kırmızı çerçeveyi kaldırıyor , eğer düzelltiyse kırmızı çerçeve gözükmesin diye
@@ -612,6 +612,21 @@ public class GUI_Manager extends Application {
         } else {
             fields[12].setStyle("");
         }
+        if(!mode) {
+            Artifact selectedArtifact = catalog.findArtifactById(fields[0].getText());
+            if (selectedArtifact != null) {
+                fields[0].setStyle("-fx-border-color: red;");
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("ID Conflict");
+                alert.setHeaderText(null);
+                alert.setContentText("There is already exist a artifact with ID = " + fields[0].getText());
+                alert.showAndWait();
+                isValid = false;
+            } else {
+                fields[0].setStyle("");
+            }
+        }
+
         int[] floatFieldIndices = {7, 8, 9, 10};  //width,length,height,weight ' in float değer olup olmadığını kontrol ediyor
         for (int index : floatFieldIndices) {
             try {
