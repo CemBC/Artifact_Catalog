@@ -28,7 +28,7 @@ import java.util.List;
 
 public class GUI_Manager extends Application {
     private Catalog catalog = new Catalog();
-    private final String[] tags = {"tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9"};
+    private final String[] tags = {"domestic", "fragmented", "funerary", "inscribed", "jewelery", "mythological", "reconstructed", "religious", "weaponry"};
     private CheckBox[] tagCheckBoxes = new CheckBox[tags.length];
     private final String  path = System.getProperty("user.home") + "/Documents/artifacts.json";
     private final String downloadsPath = System.getProperty("user.home") + "/Downloads/exported_artifacts.json";
@@ -291,11 +291,13 @@ public class GUI_Manager extends Application {
         HBox topButtonBox = new HBox(10);
         topButtonBox.getChildren().addAll(loadButton);
 
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
         fileMenu.getItems().addAll(importButton, exportButton);
         menuBar.getMenus().add(fileMenu);
         vbox.getChildren().addAll(topButtonBox, searchField, tagBox, scrollPane, buttonBox);
 
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 830, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -400,6 +402,8 @@ public class GUI_Manager extends Application {
         grid.add(imagePathField, 1, 13);
         grid.add(selectImageButton, 2, 13);
 
+        datePicker.prefWidthProperty().bind(dateField.widthProperty());
+
         GridPane tagGrid = new GridPane();
         tagGrid.setPadding(new Insets(10));
         tagGrid.setHgap(10);
@@ -407,7 +411,7 @@ public class GUI_Manager extends Application {
         CheckBox[] tagCheckBoxes = new CheckBox[tags.length];
         for (int i = 0; i < tags.length; i++) {
             tagCheckBoxes[i] = new CheckBox(tags[i]);
-            tagGrid.add(tagCheckBoxes[i], i % 3, i / 3);
+            tagGrid.add(tagCheckBoxes[i], i % 2, i / 2);
         }
         grid.add(new Label("Tags:"), 0, 14);
         grid.add(tagGrid, 1, 14);
@@ -417,7 +421,7 @@ public class GUI_Manager extends Application {
 
         grid.add(saveButton, 1, 15);
 
-        Scene scene = new Scene(grid, 400, 700);
+        Scene scene = new Scene(grid, 430, 730);
         dialog.setScene(scene);
         dialog.show();
     }
@@ -500,6 +504,8 @@ public class GUI_Manager extends Application {
             selectImageButton.setDisable(true);
             imagePathField.setEditable(false);
 
+
+
             CheckBox[] tagCheckBoxes = new CheckBox[tags.length];
             for (int i = 0; i < tags.length; i++) {
                 tagCheckBoxes[i] = new CheckBox(tags[i]);
@@ -539,12 +545,14 @@ public class GUI_Manager extends Application {
             grid.add(imagePathField, 1, 14);
             grid.add(selectImageButton, 2, 14);
 
+
+
             GridPane tagGrid = new GridPane();
             tagGrid.setPadding(new Insets(10));
             tagGrid.setHgap(10);
             tagGrid.setVgap(10);
             for (int i = 0; i < tags.length; i++) {
-                tagGrid.add(tagCheckBoxes[i], i % 3, i / 3);
+                tagGrid.add(tagCheckBoxes[i], i % 2, i / 2);
             }
             grid.add(new Label("Tags:"), 0, 15);
             grid.add(tagGrid, 1, 15);
@@ -569,13 +577,15 @@ public class GUI_Manager extends Application {
 
             grid.add(editButton, 1, 16);
 
+            datePicker.prefWidthProperty().bind(dateField.widthProperty());
+
             ScrollPane scrollPane = new ScrollPane(grid);
             scrollPane.setFitToWidth(true);
             scrollPane.setFitToHeight(true);
             scrollPane.setPrefViewportWidth(400);
             scrollPane.setPrefViewportHeight(400);
 
-            Scene scene = new Scene(scrollPane, 400, 700);
+            Scene scene = new Scene(scrollPane, 450, 750);
             dialog.setScene(scene);
             dialog.show();
         }
