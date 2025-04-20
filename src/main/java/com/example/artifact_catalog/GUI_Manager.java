@@ -264,9 +264,19 @@ public class GUI_Manager extends Application {
             }
         });
 
-        HBox buttonBox = new HBox(10); // 10 piksel boşluk ile
-        HBox topButtonBox=new HBox(10);
-        buttonBox.getChildren().addAll(addButton, removeButton);
+
+        Button backButton = new Button("Back");
+        backButton.setOnAction(e -> {
+
+            primaryStage.close();
+            showWelcomeScreen(primaryStage);
+
+        });
+
+        HBox buttonBox = new HBox(10); // 10 piksel boşluk
+        HBox topButtonBox = new HBox(10);
+
+        buttonBox.getChildren().addAll(addButton, removeButton, backButton);
         topButtonBox.getChildren().addAll(loadButton);
         fileMenu.getItems().addAll(importButton, exportButton);
         menuBar.getMenus().add(fileMenu);
@@ -275,6 +285,7 @@ public class GUI_Manager extends Application {
         Scene scene = new Scene(root, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 
     private void showAddArtifactDialog() {
