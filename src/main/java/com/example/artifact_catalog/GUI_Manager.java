@@ -82,22 +82,37 @@ public class GUI_Manager extends Application {
         Button helpButton = new Button("HELP");
         helpButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px 20px; -fx-font-family: 'Times New Roman';");
         helpButton.setOnAction(e -> {
-            Stage helpStage = new Stage();
-            helpStage.setTitle("Help");
+            try (BufferedReader rd = new BufferedReader(
+                    new InputStreamReader(getClass().getClassLoader().getResourceAsStream("orkun.txt")))) {
+                StringBuilder content = new StringBuilder();
+                String line;
+                while ((line = rd.readLine()) != null) {
+                    content.append(line).append(System.lineSeparator());
+                }
+                Stage stage2 = new Stage();
+                stage2.setTitle("Help");
 
-            TextArea helpText = new TextArea();
-            helpText.setText("text girilcek");
-            helpText.setEditable(false);
-            helpText.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 14px;");
+                TextArea textArea = new TextArea(content.toString());
+                textArea.setEditable(false);
+                textArea.setWrapText(true);
+                ScrollPane scrollPane = new ScrollPane(textArea);
+                scrollPane.setFitToWidth(true);
+                scrollPane.setFitToHeight(true);
 
-            ScrollPane scrollPane = new ScrollPane(helpText);
-            scrollPane.setFitToWidth(true);
-            scrollPane.setFitToHeight(true);
-
-            Scene helpScene = new Scene(scrollPane, 400, 300);
-            helpStage.setScene(helpScene);
-            helpStage.show();
+                BorderPane root2 = new BorderPane(scrollPane);
+                Scene scene2 = new Scene(root2, 600, 400);
+                stage2.setResizable(false);
+                stage2.setScene(scene2);
+                stage2.show();
+            } catch (IOException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Could not load help file");
+                alert.setContentText(ex.getMessage());
+                alert.showAndWait();
+            }
         });
+
 
 
 
