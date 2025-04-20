@@ -32,7 +32,7 @@ public class GUI_Manager extends Application {
     private CheckBox[] tagCheckBoxes = new CheckBox[tags.length];
     private final String  path = System.getProperty("user.home") + "/Documents/artifacts.json";
     private final String downloadsPath = System.getProperty("user.home") + "/Downloads/exported_artifacts.json";
-
+    private final String datePattern = "^(0[1-9]|[12][0-9]|3[01]).(0[1-9]|1[0-2]).\\d{4}$";  //date için regex 01.01.2001
     @Override
     public void start(Stage primaryStage) {
         showWelcomeScreen(primaryStage);
@@ -313,6 +313,7 @@ public class GUI_Manager extends Application {
         grid.setVgap(10);
 
         TextField idField = new TextField();
+        idField.setEditable(false);
         TextField nameField = new TextField();
         TextField categoryField = new TextField();
         TextField civilizationField = new TextField();
@@ -341,6 +342,11 @@ public class GUI_Manager extends Application {
         });
         datePicker.getEditor().setDisable(true);
         datePicker.getEditor().setOpacity(0);
+
+
+        nameField.textProperty().addListener((observable, oldValue, newValue) -> updateIdField(nameField, dateField, idField));
+        dateField.textProperty().addListener((observable, oldValue, newValue) -> updateIdField(nameField, dateField, idField));
+
 
         TextField[] fields = {idField, nameField, categoryField, civilizationField, locationField, compositionField, placeField, widthField, lengthField, heightField, weightField, imagePathField , dateField};
 
@@ -414,6 +420,21 @@ public class GUI_Manager extends Application {
         Scene scene = new Scene(grid, 400, 700);
         dialog.setScene(scene);
         dialog.show();
+    }
+
+    private void updateIdField(TextField nameField, TextField dateField, TextField idField) {
+        String name = nameField.getText().trim();
+        String date = dateField.getText().trim();
+        if (!name.isEmpty() && !date.isEmpty() && date.matches(datePattern)) {
+            try {
+                String year = date.split("\\.")[2];
+                idField.setText(year + "_" + name);
+            } catch (Exception e) {
+                idField.setText("");
+            }
+        } else {
+            idField.setText("");
+        }
     }
 
 
@@ -605,7 +626,6 @@ public class GUI_Manager extends Application {
                 isValid = false;
             }
         }
-        String datePattern = "^(0[1-9]|[12][0-9]|3[01]).(0[1-9]|1[0-2]).\\d{4}$";  //date için regex 01.01.2001
         if (fields[12].getText().isEmpty() || !fields[12].getText().matches(datePattern)) {//|| !datePicker.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")).matches(datePattern)) {
             fields[12].setStyle("-fx-border-color: red;");
             isValid = false;
