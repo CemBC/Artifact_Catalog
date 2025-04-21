@@ -12,7 +12,7 @@ import java.util.List;
 
 public class File_Manager {
 
-    private final List<String> validTags = List.of("tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9");
+    private final List<String> validTags = List.of("domestic", "fragmented", "funerary", "inscribed", "jewelery", "mythological", "reconstructed", "religious", "weaponry");
 
     public List<Artifact> readArtifactsFromFile(String filePath) throws IOException {
         Path path = Paths.get(filePath);

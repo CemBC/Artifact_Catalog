@@ -46,8 +46,3 @@
    - If the JSON file is invalid or corrupted, an error message will be displayed.
 
 This guide provides an overview of the application's main features. For further assistance, contact the development team.
-
-Aleyna Kök:           https://github.com/aleynakok
-Cem Başar Ceylani:    https://github.com/aleynakok
-Orkun Efe Özdemir:    https://github.com/orkrun
-Betül Özsan:             https://github.com/elmacan

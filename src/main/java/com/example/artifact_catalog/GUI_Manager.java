@@ -35,13 +35,13 @@ public class GUI_Manager extends Application {
     private final String datePattern = "^(0[1-9]|[12][0-9]|3[01]).(0[1-9]|1[0-2]).\\d{4}$";  //date için regex 01.01.2001
     @Override
     public void start(Stage primaryStage) {
+        System.out.println("Control statement application started...");
         showWelcomeScreen(primaryStage);
     }
 
     private void showWelcomeScreen(Stage primaryStage) {
-        Stage welcomeStage = new Stage();
-        welcomeStage.setResizable(false);
-        welcomeStage.setTitle("Artifact Catalog");
+        primaryStage.setResizable(false);
+        primaryStage.setTitle("Artifact Catalog");
 
         VBox vbox = new VBox(20);
         vbox.setPadding(new Insets(20));
@@ -73,7 +73,7 @@ public class GUI_Manager extends Application {
         Button continueButton = new Button("CONTINUE");
         continueButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px 20px; -fx-font-family: 'Times New Roman';");
         continueButton.setOnAction(e -> {
-            welcomeStage.close();
+            primaryStage.close();
             showMainScreen(primaryStage);
         });
 
@@ -128,8 +128,8 @@ public class GUI_Manager extends Application {
 
 
         Scene scene = new Scene(vbox, 400, 400);
-        welcomeStage.setScene(scene);
-        welcomeStage.show();
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     private void showMainScreen(Stage primaryStage) {
@@ -724,6 +724,5 @@ public class GUI_Manager extends Application {
 
     public static void main(String[] args) {
         launch(args);
-
     }
 }
