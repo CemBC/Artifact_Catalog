@@ -10,6 +10,7 @@
    - To filter artifacts:
      - Enter keywords in the search bar. Without any input, all artifacts will be displayed.
         You should use comma (,) to separate multiple keywords.
+        WARNING: Any artifact that contains any keyword will be displayed.
      - Select relevant tags. (Optional)
      - Click the "Load Artifacts" button.
    - Double-click an item in the list to view its details.

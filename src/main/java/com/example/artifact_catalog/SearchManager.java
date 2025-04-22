@@ -12,13 +12,18 @@ public class SearchManager {
         if (data.isEmpty()) {
             result = artifacts;
         } else {
+            List<String> cleaned = new ArrayList<>();
             String[] splitted = data.toLowerCase().split(",");
             for (int i = 0; i < splitted.length; i++) {
                 splitted[i] = splitted[i].trim();
+                if(!splitted[i].isEmpty()) {
+                    cleaned.add(splitted[i]);
+                }
             }
 
+
             for (Artifact artifact : artifacts) {
-                if (matched(artifact, splitted)) {
+                if (matched(artifact, cleaned)) {
                     result.add(artifact);
                 }
             }
@@ -29,13 +34,13 @@ public class SearchManager {
         return result;
     }
 
-    private boolean matched(Artifact artifact, String[] splitted) {
-        for (String term : splitted) {
-            if (!artifactMatched(artifact, term)) {
-                return false;
+    private boolean matched(Artifact artifact, List<String> cleaned) {
+        for (String term : cleaned) {
+            if (artifactMatched(artifact, term)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
 
