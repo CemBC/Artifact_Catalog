@@ -1,8 +1,10 @@
 package com.example.artifact_catalog;
 
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -10,10 +12,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.FileChooser;
+import javafx.stage.*;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -173,6 +174,8 @@ public class GUI_Manager extends Application {
                             fileManager.writeAllArtifactsToFile(path, ImportedData); // Listeyi belgelerde zaten hazır açılı olan json dosyasına aktar
                             Files.delete(selectedFile.toPath());  // Seçilen dosyayı sil
                             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+
+                            showNotification(root , "Import successful!");
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
@@ -187,12 +190,7 @@ public class GUI_Manager extends Application {
             try {
                 List<Artifact> exportedData = fileManager.readArtifactsFromFile(path); //Belgelerdeki json dosyasını oku ve listeye aktar
                 fileManager.writeAllArtifactsToFile(downloadsPath, exportedData);   //Dosyayı Downloads'a aktar
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Export Successful");
-                alert.setHeaderText(null);
-                alert.setContentText("Data exported to: " + downloadsPath);
-                alert.initModality(Modality.NONE);  //Modality.NONE olunca alerti kapatmana gerek yok
-                alert.show();
+                showNotification(root,"Export successful!\nExported to (" + downloadsPath + ")");
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -725,4 +723,38 @@ public class GUI_Manager extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    private void showNotification(Node node, String message) {
+        Popup popup = new Popup();
+        Label label = new Label(message);
+        label.setStyle(""" 
+        -fx-background-color: #27ae60;
+        -fx-text-fill: white;
+        -fx-font-weight: bold;
+        -fx-padding: 10px 20px;
+        -fx-background-radius: 8px;
+        -fx-border-radius: 8px;
+        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 4, 0.5, 2, 2);
+        """);
+
+        popup.getContent().add(label);
+
+        Window window = node.getScene().getWindow();
+        javafx.geometry.Rectangle2D screenBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+
+        double x = screenBounds.getMaxX() - 320;
+        double y = screenBounds.getMinY() + 40;
+
+        popup.show(window, x, y);
+
+        FadeTransition fade = new FadeTransition(Duration.seconds(1.5), label);
+        fade.setFromValue(1.0);
+        fade.setToValue(0.0);
+        fade.setDelay(Duration.seconds(2));
+        fade.setOnFinished(e -> popup.hide());
+        fade.play();
+    }
+
+
+
 }
