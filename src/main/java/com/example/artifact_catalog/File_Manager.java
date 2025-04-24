@@ -28,41 +28,63 @@ public class File_Manager {
             List<Artifact> artifacts = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                List<String> expectedKeys = List.of(
+                        "artifactid", "artifactname", "category", "civilization", "discoverylocation",
+                        "composition", "discoverydate", "currentplace", "imagePath", "dimensions", "weight", "tags"
+                );
+                for (String key : expectedKeys) {
+                    if (!jsonObject.has(key)) {
+                        if (key.equals("dimensions")) {
+                            JSONObject emptyDimensions = new JSONObject();
+                            emptyDimensions.put("width", JSONObject.NULL);
+                            emptyDimensions.put("length", JSONObject.NULL);
+                            emptyDimensions.put("height", JSONObject.NULL);
+                            jsonObject.put("dimensions", emptyDimensions);
+                        } else if (key.equals("tags")) {
+                            jsonObject.put("tags", new JSONArray());
+                        } else {
+                            jsonObject.put(key, JSONObject.NULL);
+                        }
+                    }
+                }
+
                 Artifact artifact = new Artifact();
-                artifact.setArtifactId(jsonObject.getString("artifactid"));
-                artifact.setArtifactName(jsonObject.getString("artifactname"));
-                artifact.setCategory(jsonObject.getString("category"));
-                artifact.setCivilization(jsonObject.getString("civilization"));
-                artifact.setDiscoveryLocation(jsonObject.getString("discoverylocation"));
-                artifact.setComposition(jsonObject.getString("composition"));
-                artifact.setDiscoveryDate(jsonObject.getString("discoverydate"));
-                artifact.setCurrentPlace(jsonObject.getString("currentplace"));
+                artifact.setArtifactId(jsonObject.optString("artifactid", null));
+                artifact.setArtifactName(jsonObject.optString("artifactname", null));
+                artifact.setCategory(jsonObject.optString("category", null));
+                artifact.setCivilization(jsonObject.optString("civilization", null));
+                artifact.setDiscoveryLocation(jsonObject.optString("discoverylocation", null));
+                artifact.setComposition(jsonObject.optString("composition", null));
+                artifact.setDiscoveryDate(jsonObject.optString("discoverydate", null));
+                artifact.setCurrentPlace(jsonObject.optString("currentplace", null));
                 artifact.setImagePath(jsonObject.optString("imagePath", ""));
 
                 JSONObject dimensionsObject = jsonObject.getJSONObject("dimensions");
                 Dimensions dimensions = new Dimensions();
-                dimensions.setWidth(dimensionsObject.getDouble("width"));
-                dimensions.setLength(dimensionsObject.getDouble("length"));
-                dimensions.setHeight(dimensionsObject.getDouble("height"));
+                dimensions.setWidth(dimensionsObject.optDouble("width", 0.0));
+                dimensions.setLength(dimensionsObject.optDouble("length", 0.0));
+                dimensions.setHeight(dimensionsObject.optDouble("height", 0.0));
+                artifact.setWeight(jsonObject.optDouble("weight", 0.0));
                 artifact.setDimensions(dimensions);
-                artifact.setWeight(jsonObject.getDouble("weight"));
-                JSONArray tagsArray = jsonObject.getJSONArray("tags");
 
+                JSONArray tagsArray = jsonObject.getJSONArray("tags");
                 List<String> tags = new ArrayList<>();
                 for (int j = 0; j < tagsArray.length(); j++) {
-                    String tag = tagsArray.getString(j);
+                    String tag = tagsArray.optString(j);
                     if (validTags.contains(tag)) {
                         tags.add(tag);
                     }
                 }
                 artifact.setTags(tags);
+
                 artifacts.add(artifact);
             }
             return artifacts;
         } catch (JSONException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("File Read Error");
-            alert.setHeaderText("An error occurred while reading the file. The json file should be named artifacts.json and be in the documents directory. Or the json format is corrupted");
+            alert.setHeaderText("An error occurred while reading the file.The json format might be corrupted");
             alert.setContentText(e.getMessage());
             alert.showAndWait();
             throw e;
