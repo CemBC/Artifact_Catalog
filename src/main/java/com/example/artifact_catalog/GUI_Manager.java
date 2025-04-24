@@ -589,6 +589,15 @@ public class GUI_Manager extends Application {
     }
 
     private void showImage(String imagePath) { //Image butonuna basınca açılan pencere
+        File imageFile = new File(imagePath);
+        if (!imageFile.exists() || imageFile.isDirectory()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Image Not Found");
+            alert.setHeaderText(null);
+            alert.setContentText("No image found on the specified path.");
+            alert.showAndWait();
+            return;
+        }
         Stage imageStage = new Stage();
         imageStage.setTitle("Image Viewer");
 
