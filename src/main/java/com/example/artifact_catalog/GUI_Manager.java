@@ -30,7 +30,7 @@ public class GUI_Manager extends Application {
     private Catalog catalog = new Catalog();
     private final String[] tags = {"domestic", "fragmented", "funerary", "inscribed", "jewelery", "mythological", "reconstructed", "religious", "weaponry"};
     private CheckBox[] tagCheckBoxes = new CheckBox[tags.length];
-    private final String  path = System.getProperty("user.home") + "/Documents/artifacts.json";
+    private static final String path = "artifacts.json";
     private final String downloadsPath = System.getProperty("user.home") + "/Downloads/exported_artifacts.json";
     private final String datePattern = "^(0[1-9]|[12][0-9]|3[01]).(0[1-9]|1[0-2]).\\d{4}$";  //date için regex 01.01.2001
     @Override

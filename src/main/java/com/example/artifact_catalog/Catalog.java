@@ -7,7 +7,7 @@ import java.io.IOException;
 public class Catalog {
     List<Artifact> artifacts;
     File_Manager fileManager;
-    private static final String FILE_PATH = System.getProperty("user.home") + "/Documents/artifacts.json";
+    private static final String FILE_PATH = "artifacts.json";
 
     public Catalog() {
         this.artifacts = new ArrayList<>();
