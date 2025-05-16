@@ -78,7 +78,6 @@ public class GUI_Manager extends Application {
         });
 
 
-
         Button helpButton = new Button("HELP");
         helpButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px 20px; -fx-font-family: 'Times New Roman';");
         helpButton.setOnAction(e -> {
@@ -301,6 +300,41 @@ public class GUI_Manager extends Application {
 
     }
 
+    private void configureErrorLabel(Label errorLabel) {
+            errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 0.9em;");
+            errorLabel.setManaged(false);
+            errorLabel.setVisible(false);
+            errorLabel.setPadding(new Insets(2, 0, 0, 0));
+    }
+
+
+        private void addNumericValidationListener(TextField textField, Label errorLabel) {
+            textField.textProperty().addListener((observable, oldValue, newValue) -> {
+                String text = (newValue == null) ? "" : newValue.trim();
+                if (text.isEmpty()) {
+                    textField.setStyle("");
+                    errorLabel.setText("");
+                    errorLabel.setManaged(false);
+                    errorLabel.setVisible(false);
+                    return;
+                }
+                try {
+                    Double.parseDouble(text);
+                    textField.setStyle("");
+                    errorLabel.setText("");
+                    errorLabel.setManaged(false);
+                    errorLabel.setVisible(false);
+                } catch (NumberFormatException e) {
+                    textField.setStyle("-fx-border-color: red; -fx-border-width: 1px;");
+                    errorLabel.setText("Must be a numeric value.");
+                    errorLabel.setManaged(true);
+                    errorLabel.setVisible(true);
+                }
+            });
+        }
+
+
+
     private void showAddArtifactDialog() {
         Stage dialog = new Stage();
         dialog.setResizable(false);
@@ -322,10 +356,27 @@ public class GUI_Manager extends Application {
         DatePicker datePicker = new DatePicker();
         datePicker.setEditable(false);
         TextField placeField = new TextField();
+
         TextField widthField = new TextField();
+        Label widthErrorLabel = new Label();
+        configureErrorLabel(widthErrorLabel);
+        addNumericValidationListener(widthField, widthErrorLabel);
+
         TextField lengthField = new TextField();
+        Label lengthErrorLabel = new Label();
+        configureErrorLabel(lengthErrorLabel);
+        addNumericValidationListener(lengthField, lengthErrorLabel);
+
         TextField heightField = new TextField();
+        Label heightErrorLabel = new Label();
+        configureErrorLabel(heightErrorLabel);
+        addNumericValidationListener(heightField, heightErrorLabel);
+
         TextField weightField = new TextField();
+        Label weightErrorLabel = new Label();
+        configureErrorLabel(weightErrorLabel);
+        addNumericValidationListener(weightField, weightErrorLabel);
+
         TextField imagePathField = new TextField();
         Button selectImageButton = new Button("Select Image");
 
@@ -370,6 +421,8 @@ public class GUI_Manager extends Application {
             });
         }
 
+
+
         grid.add(new Label("ID:"), 0, 0);
         grid.add(idField, 1, 0);
         grid.add(new Label("Name:"), 0, 1);
@@ -387,14 +440,25 @@ public class GUI_Manager extends Application {
         grid.add(dateField, 1, 7);
         grid.add(new Label("Current Place:"), 0, 8);
         grid.add(placeField, 1, 8);
+
+
         grid.add(new Label("Width:"), 0, 9);
-        grid.add(widthField, 1, 9);
+        VBox widthBox = new VBox(2, widthField, widthErrorLabel);
+        grid.add(widthBox, 1, 9);
+
         grid.add(new Label("Length:"), 0, 10);
-        grid.add(lengthField, 1, 10);
+        VBox lengthBox = new VBox(2, lengthField, lengthErrorLabel);
+        grid.add(lengthBox, 1, 10);
+
         grid.add(new Label("Height:"), 0, 11);
-        grid.add(heightField, 1, 11);
+        VBox heightBox = new VBox(2, heightField, heightErrorLabel);
+        grid.add(heightBox, 1, 11);
+
         grid.add(new Label("Weight:"), 0, 12);
-        grid.add(weightField, 1, 12);
+        VBox weightBox = new VBox(2, weightField, weightErrorLabel);
+        grid.add(weightBox, 1, 12);
+        // --- DÜZELTİLMİŞ KISIM SONU ---
+
         grid.add(new Label("Image Path:"), 0, 13);
         grid.add(imagePathField, 1, 13);
         grid.add(selectImageButton, 2, 13);
@@ -417,11 +481,13 @@ public class GUI_Manager extends Application {
         saveButton.setOnAction(e -> saveArtifact(fields, tagCheckBoxes, dialog, false));
 
         grid.add(saveButton, 1, 15);
-
         Scene scene = new Scene(grid, 430, 730);
+
         dialog.setScene(scene);
         dialog.show();
     }
+
+
 
     private void updateIdField(TextField nameField, TextField dateField, TextField idField) {
         String name = nameField.getText().trim();
@@ -766,3 +832,7 @@ public class GUI_Manager extends Application {
 
 
 }
+
+
+
+
