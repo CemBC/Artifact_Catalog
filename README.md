@@ -86,17 +86,21 @@ An installer for Windows has been created using **Inno Setup** and is available 
 - Maven
 - jlink (for custom runtime)
 - Inno Setup (Installer creation)
-- Batch to EXE Converter
+- Launch4J
 
 ---
 
 ## 📁 File Structure (Installed Version)
+
 Artifact_Catalog/
-├── Artifact_Catalog.exe
-├── Artifact_Catalog.jar
-├── artifacts.json
-├── config.json
-├── /image/ (custom runtime)
+
+│
+
+├─ Artifact_Catalog.exe  
+├─ Artifact_Catalog.jar  
+├─ artifacts.json  
+└─ /my-runtime/ (custom runtime)
+
 
 
 ---
