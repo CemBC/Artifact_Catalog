@@ -27,10 +27,3 @@ mvn clean javafx:run
 ```
 
 A compatible Java Development Kit and JavaFX environment are required.
-
-## Author
-
-**Cem Başar Ceylani**
-
-- GitHub: [CemBC](https://github.com/CemBC)
-- Portfolio: [cembc.github.io/CemBasarCeylani](https://cembc.github.io/CemBasarCeylani)
